@@ -1,0 +1,95 @@
+# Стандартные бинарники Go
+*.exe
+*.test
+*.a
+*.o
+*.so
+*.hprof
+*.race
+*.out
+
+# Кэшированные файлы сборки и тестовые артефакты
+bin/*
+obj/*
+pkg/*
+build/
+dist/
+
+# Файлы журнала и временные файлы
+*.log
+*.tmp
+*.temp
+*.swp
+.DS_Store
+
+# Конфигурационные файлы разработчика
+.idea/
+.vscode/
+.vscode-test/
+.env*
+.settings/
+config.json
+
+# Файлы конфигурации Docker и Kubernetes
+docker-compose.yml
+kubernetes.yaml
+
+# Генерируемые файлы документации
+doc/*.html
+doc/*.css
+doc/*.js
+
+# Общие системные файлы
+Thumbs.db
+Desktop.ini
+
+# Скрытые папки macOS
+__MACOSX
+
+# Личные ключи шифрования
+*.pem
+*.key
+*.crt
+
+# Специальные файлы сборки
+.coverprofile
+.profraw
+.testmain
+.benchmem
+.cache
+.cov
+
+# Директории для специфичных инструментов
+vendor/
+node_modules/
+coverage.out
+cov.*
+
+# Бинарные файлы protobuf
+*.pb.go
+
+# Специфичная информация для тестов
+testdata/*.[^/]*.golden
+testdata/.okay
+
+# Протоколы трассировки и профилирование
+trace.out
+pprof.*
+
+# Деплоймент артефакты
+Dockerfile*
+kustomization.yaml
+helm-chart/
+chart.lock
+charts/
+values.yaml
+
+# Исключить результаты lint и tools
+*.lint
+.gometalinter.json
+*.vendor.conf
+.tools*
+
+# Исключение некоторых популярных пакетов
+vendor/**/*_test.go
+vendor/**/*_test.
