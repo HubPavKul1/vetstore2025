@@ -1,4 +1,4 @@
-package db
+package models
 
 import (
 	"time"
@@ -33,6 +33,8 @@ type Product struct {
 type Supplier struct {
 	gorm.Model
 	Name string
+	ProductReceipts []ProductReceipt
+
 }
 
 // Поступление товара

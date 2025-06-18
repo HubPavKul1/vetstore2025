@@ -1,41 +1,59 @@
 package db
 
 import (
-    "fmt"
-    "log"
+	"fmt"
 
-    "gorm.io/driver/sqlite"
-    "gorm.io/gorm"
-	"models"
+	"github.com/HubPavKul1/vetstore2025/internal/db/models"
+     "gorm.io/driver/sqlite"
+	
+	"gorm.io/gorm"
+
+    _ "github.com/mattn/go-sqlite3"
 )
 
 var DB *gorm.DB
 
-func InitDB() error {
+// InitDB открывает соединение с базой данных и возвращает ошибку, если возникнут проблемы.
+func InitDB(filePath string) error {
     var err error
-    DB, err = gorm.Open(sqlite.Open("vetstore2025.db"), &gorm.Config{})
+    DB, err = gorm.Open(sqlite.Open(filePath), &gorm.Config{})
     if err != nil {
-        log.Fatalf("Failed to connect database: %v", err)
-        return err
+        return fmt.Errorf("failed to connect database: %w", err)
     }
 
-    // Создаем таблицы
-    err = migrate()
+    // Выполняем миграцию
+    err = migrate(DB)
     if err != nil {
-        log.Fatalf("Migration failed: %v", err)
-        return err
+        return fmt.Errorf("migration failed: %w", err)
     }
+
     fmt.Println("Database connected successfully.")
     return nil
 }
 
-func migrate() error {
-    err := DB.AutoMigrate(
-		&models.Category{}, 
-		&models.SubCategory{},
-		) // Добавьте остальные модели
+// Migrate выполняет миграцию базы данных.
+func migrate(db *gorm.DB) error {
+    err := db.AutoMigrate(
+        &models.Category{},
+        &models.SubCategory{},
+        &models.Product{},
+        &models.Supplier{},
+        &models.ProductReceipt{},
+     )
     if err != nil {
-        return fmt.Errorf("migration failed: %w", err)
+        return fmt.Errorf("auto migration failed: %w", err)
+    }
+    return nil
+}
+
+// Close закрывает установленное ранее соединение с базой данных.
+func Close() error {
+    if DB != nil {
+        sqlDB, err := DB.DB() // Получаем raw sql.DB
+        if err != nil {
+            return err
+        }
+        return sqlDB.Close() // Закрываем raw sql.DB
     }
     return nil
 }

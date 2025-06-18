@@ -1,0 +1,29 @@
+package main
+
+import (
+	"log"
+	"os"
+
+	"github.com/HubPavKul1/vetstore2025/internal/db"
+	// "fyne.io/fyne/v2/app"
+)
+
+func main() {
+    // Инициализируем базу данных
+    err := db.InitDB("vetstore2025.db") // Передаем путь к файлу базы данных
+    if err != nil {
+        log.Fatalf("database initialization failed: %v", err)
+    }
+
+    // Закрываем базу данных после завершения работы приложения
+    defer db.Close()
+
+    // Основной поток приложения продолжается далее...
+
+    // app := app.New()
+    // win := app.NewWindow("VetApteka")
+    // setupUI(win)
+    // win.ShowAndRun()
+
+    os.Exit(0)
+}
