@@ -3,12 +3,12 @@ package db
 import (
 	"fmt"
 
-	"github.com/HubPavKul1/vetstore2025/internal/db/models"
-     "gorm.io/driver/sqlite"
-	
+	"gorm.io/driver/sqlite"
+
 	"gorm.io/gorm"
 
-    _ "github.com/mattn/go-sqlite3"
+	"github.com/HubPavKul1/vetstore2025/internal/db/models"
+	_ "github.com/mattn/go-sqlite3"
 )
 
 var DB *gorm.DB
@@ -37,8 +37,20 @@ func migrate(db *gorm.DB) error {
         &models.Category{},
         &models.SubCategory{},
         &models.Product{},
+        &models.Packaging{},
+        &models.Unit{},
+        //Склад
         &models.Supplier{},
         &models.ProductReceipt{},
+        &models.ProductInStore{},
+        &models.MovingFromStore{},
+        // Подразделения
+        &models.Department{},
+        &models.Position{},
+        &models.Employee{},
+        
+       
+
      )
     if err != nil {
         return fmt.Errorf("auto migration failed: %w", err)

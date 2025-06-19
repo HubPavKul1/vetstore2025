@@ -1,8 +1,7 @@
 package models
 
 import (
-
-	"github.com/HubPavKul1/vetstore2025/internal/services"
+	"github.com/HubPavKul1/vetstore2025/internal/utils"
 	"gorm.io/gorm"
 )
 
@@ -37,7 +36,7 @@ func(e Employee)GetFullName()string {
 }
 
 func(e Employee)GetShortName()string {
-	firstNameLetter := services.FirstLetterFromString(e.FirstName)
-	firstPatrLetter := services.FirstLetterFromString(e.Patronymic)
+	firstNameLetter := utils.FirstLetterFromString(e.FirstName)
+	firstPatrLetter := utils.FirstLetterFromString(e.Patronymic)
 	return e.LastName + " " + firstNameLetter + ". " + firstPatrLetter + "."
 }

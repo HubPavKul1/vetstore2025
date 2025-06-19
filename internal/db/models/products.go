@@ -26,29 +26,25 @@ type Product struct {
 	Name string
 	SubCategoryID uint
 	ProductsInStore []ProductInStore
+	PackagingID uint
+	UnitID uint
 }
 
 // Наименование упаковки товара
 type Packaging struct {
 	gorm.Model
 	Name string
-	ProductsInStore []ProductInStore
+	Products []Product
 }
 
 // Наименование единиц учета
 type Unit struct {
 	gorm.Model
 	Name string
-	ProductsInStore []ProductInStore
+	Products []Product
 }
 
-// Поставщики
-type Supplier struct {
-	gorm.Model
-	Name string
-	Phone string
-	ProductReceipts []ProductReceipt
-}
+
 
 
 

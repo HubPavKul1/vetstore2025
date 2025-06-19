@@ -1,6 +1,7 @@
-package services
+package utils
 
 import (
+	"math"
 	"unicode"
 	"unicode/utf8"
 )
@@ -16,4 +17,12 @@ func CapitalizeFirstLetter(s string) string {
 func FirstLetterFromString(s string) string {
 	r, _ := utf8.DecodeRuneInString(s)
 	return string(r)
+}
+
+func RoundFloat(f float64, decimalPlaces int) float64 {
+
+    div := math.Pow(10.0, float64(decimalPlaces))
+
+    return math.Round(f * div) / div
+
 }
