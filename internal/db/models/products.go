@@ -1,8 +1,6 @@
 package models
 
 import (
-	"time"
-
 	"gorm.io/gorm"
 )
 
@@ -22,25 +20,36 @@ type SubCategory struct {
 	Products []Product
 }
 
-// Товар
+// Товар номенклатура
 type Product struct {
 	gorm.Model
 	Name string
 	SubCategoryID uint
+	ProductsInStore []ProductInStore
+}
+
+// Наименование упаковки товара
+type Packaging struct {
+	gorm.Model
+	Name string
+	ProductsInStore []ProductInStore
+}
+
+// Наименование единиц учета
+type Unit struct {
+	gorm.Model
+	Name string
+	ProductsInStore []ProductInStore
 }
 
 // Поставщики
 type Supplier struct {
 	gorm.Model
 	Name string
+	Phone string
 	ProductReceipts []ProductReceipt
-
 }
 
-// Поступление товара
-type ProductReceipt struct {
-	gorm.Model
-	ReceiptDate time.Time
-	SupplierID uint
-}
+
+
 
