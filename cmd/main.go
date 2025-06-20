@@ -5,6 +5,7 @@ import (
 	"os"
 
 	"github.com/HubPavKul1/vetstore2025/internal/db"
+	"github.com/HubPavKul1/vetstore2025/internal/ui"
 	// "fyne.io/fyne/v2/app"
 )
 
@@ -18,12 +19,7 @@ func main() {
     // Закрываем базу данных после завершения работы приложения
     defer db.Close()
 
-    // Основной поток приложения продолжается далее...
-
-    // app := app.New()
-    // win := app.NewWindow("VetApteka")
-    // setupUI(win)
-    // win.ShowAndRun()
+    ui.RunUI()
 
     os.Exit(0)
 }
