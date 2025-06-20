@@ -5,6 +5,7 @@ import (
 
 	"fyne.io/fyne/v2"
 	"fyne.io/fyne/v2/container"
+	"fyne.io/fyne/v2/dialog"
 	"fyne.io/fyne/v2/widget"
 	"github.com/HubPavKul1/vetstore2025/internal/db"
 	"github.com/HubPavKul1/vetstore2025/internal/db/models"
@@ -14,9 +15,10 @@ import (
 // AddItemDialog создает диалоговое окно для добавления товара
 func AddCategoryDialog(parent fyne.Window) {
     // Создаем новое окно
-    dialog := my_app.NewWindow("Добавить категорию")
+    dialog_win := my_app.NewWindow("Добавить категорию")
+    dialog_win.Resize(fyne.NewSize(400, 300))
 
-    // Поля для ввода данных
+    // Поле для ввода данных
     nameEntry := widget.NewEntry()
    
 
@@ -33,10 +35,11 @@ func AddCategoryDialog(parent fyne.Window) {
         if err != nil {
             fmt.Println(err)
             return
-        }
-
+        } 
+        dialog.ShowInformation("", "Категория успешно создана!", dialog_win,) // \???
+            
         // Закрываем окно
-        dialog.Close()
+        dialog_win.Close()
 
         // Обновляем список товаров в главном окне
         // (здесь нужно реализовать логику обновления списка)
@@ -50,8 +53,8 @@ func AddCategoryDialog(parent fyne.Window) {
     )
 
     // Устанавливаем контент окна
-    dialog.SetContent(content)
+    dialog_win.SetContent(content)
 
     // Показываем окно
-    dialog.Show()
+    dialog_win.Show()
 }
