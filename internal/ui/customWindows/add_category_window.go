@@ -10,13 +10,13 @@ import (
 	"github.com/HubPavKul1/vetstore2025/internal/db"
 	"github.com/HubPavKul1/vetstore2025/internal/db/models"
 	"github.com/HubPavKul1/vetstore2025/internal/db/repository"
-	"github.com/HubPavKul1/vetstore2025/internal/ui/app"
+	"github.com/HubPavKul1/vetstore2025/internal/ui"
 )
 
 // AddItemDialog создает диалоговое окно для добавления товара
 func AddCategoryDialog(parent fyne.Window) {
     // Создаем новое окно
-    dialog_win := app.My_app.NewWindow("Добавить категорию")
+    dialog_win := ui.MyApp.NewWindow("Добавить категорию")
     dialog_win.Resize(fyne.NewSize(400, 300))
 
     // Поле для ввода данных
