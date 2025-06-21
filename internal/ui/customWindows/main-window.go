@@ -1,4 +1,4 @@
-package ui
+package customwindows
 
 import (
 	"image/color"
@@ -7,11 +7,12 @@ import (
 	"fyne.io/fyne/v2/canvas"
 	"fyne.io/fyne/v2/container"
 	"fyne.io/fyne/v2/widget"
+	"github.com/HubPavKul1/vetstore2025/internal/ui/app"
 )
 
 func RunUI() {
 
-    w := my_app.NewWindow("Вет склад 2025")
+    w := app.My_app.NewWindow("Вет склад 2025")
 
     label := canvas.NewText("Welcome to VetStore2025", color.Black)
     buttonAddCat := widget.NewButton("Добавить категорию", func() {
@@ -24,6 +25,6 @@ func RunUI() {
 
     content := container.NewVBox(label, buttonAddCat, buttonAddSubCat, buttonView,)
     w.SetContent(content)
-    w.Resize(fyne.NewSize(1000, 800))
+    w.Resize(fyne.NewSize(1500, 900))
     w.ShowAndRun()
 }

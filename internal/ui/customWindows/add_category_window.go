@@ -1,4 +1,4 @@
-package ui
+package customwindows
 
 import (
 	"fmt"
@@ -10,12 +10,13 @@ import (
 	"github.com/HubPavKul1/vetstore2025/internal/db"
 	"github.com/HubPavKul1/vetstore2025/internal/db/models"
 	"github.com/HubPavKul1/vetstore2025/internal/db/repository"
+	"github.com/HubPavKul1/vetstore2025/internal/ui/app"
 )
 
 // AddItemDialog создает диалоговое окно для добавления товара
 func AddCategoryDialog(parent fyne.Window) {
     // Создаем новое окно
-    dialog_win := my_app.NewWindow("Добавить категорию")
+    dialog_win := app.My_app.NewWindow("Добавить категорию")
     dialog_win.Resize(fyne.NewSize(400, 300))
 
     // Поле для ввода данных
@@ -36,7 +37,7 @@ func AddCategoryDialog(parent fyne.Window) {
             fmt.Println(err)
             return
         } 
-        dialog.ShowInformation("", "Категория успешно создана!", dialog_win,) // \???
+        dialog.ShowInformation("", "Категория успешно создана!", parent,) // \???
             
         // Закрываем окно
         dialog_win.Close()

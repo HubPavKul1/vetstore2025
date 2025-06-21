@@ -1,4 +1,4 @@
-package ui
+package customwindows
 
 import (
 	"log"
@@ -10,12 +10,13 @@ import (
 	"github.com/HubPavKul1/vetstore2025/internal/db/models"
 	"github.com/HubPavKul1/vetstore2025/internal/db/repository"
 	service "github.com/HubPavKul1/vetstore2025/internal/services"
+	"github.com/HubPavKul1/vetstore2025/internal/ui/app"
 )
 
 // AddItemDialog создает диалоговое окно для добавления товара
 func AddSubCategoryDialog(parent fyne.Window) {
     // Создаем новое окно
-    dialog := my_app.NewWindow("Добавить подкатегорию")
+    dialog := app.My_app.NewWindow("Добавить подкатегорию")
 
 	categories, err := service.GetCategoriesService()
 	if err != nil {
