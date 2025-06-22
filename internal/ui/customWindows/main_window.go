@@ -1,14 +1,13 @@
 package customwindows
 
 import (
-	"image/color"
 
 	"fyne.io/fyne/v2"
 	"fyne.io/fyne/v2/canvas"
 	"fyne.io/fyne/v2/container"
+	"fyne.io/fyne/v2/layout"
+	"fyne.io/fyne/v2/widget"
 
-
-	// "fyne.io/fyne/v2/widget"
 	"github.com/HubPavKul1/vetstore2025/internal/ui"
 )
 
@@ -16,34 +15,43 @@ func RunUI() {
 
     w := ui.MyApp.NewWindow("Вет склад 2025")
 	w.SetMaster()
-	w.Resize(fyne.NewSize(1500, 800))
+	w.Resize(ui.WindowSize)
+	w.CenterOnScreen()
+
+	// r := canvas.NewRectangle(color.NRGBA{255, 255, 255, 255})
+
+	// window_container := container.NewCenter(r)
+
 	img := canvas.NewImageFromFile("static/vaccinesBg.png")
-	
-	img.Resize(fyne.NewSize(800, 400))
-	img.Move(fyne.NewPos(400, 30))
+	img.FillMode = canvas.ImageFillContain
+	img_x_size := ui.WindowSize.Width
+	img_y_size := ui.WindowSize.Height / 2
+	img_wrapper := container.New(
+		layout.NewGridWrapLayout(fyne.NewSize(img_x_size, img_y_size)),
+		img,
+	)
 
-    label := canvas.NewText("ДОБРО ПОЖАЛОВАТЬ НА ВЕТСКЛАД", color.Black)
-	label.TextStyle = fyne.TextStyle{Bold: true}
-	label.TextSize = 50
-	label.Move(fyne.NewPos(400, 500))
+	c := container.New(
+		layout.NewCenterLayout(),
+		img_wrapper,
+	)
 
-	
-    // buttonAddCat := widget.NewButton("Добавить категорию", func() {
-	// 	AddCategoryDialog(w)
-	// })
-	// buttonAddSubCat := widget.NewButton("Добавить подкатегорию", func() {
-	// 	AddSubCategoryDialog(w)
-	// })
-    // buttonView := widget.NewButton("Показать категории", func() {})
+    title := canvas.NewText("ДОБРО ПОЖАЛОВАТЬ НА ВЕТСКЛАД", ui.WindowTitleColor)
+	title.TextStyle = fyne.TextStyle{Bold: true}
+	title.TextSize = 50
+	title.Alignment = fyne.TextAlignCenter
 
-    content := container.NewWithoutLayout(
-		img, 
-		label, 
-		// buttonAddCat, 
-		// buttonAddSubCat, 
-		// buttonView,
+	menu := MainMenu(w)
+
+
+    content := container.NewVBox(
+		c,
+		title, 
+		widget.NewLabel(""),
+		&menu,
 	)
     w.SetContent(content)
    
-    w.ShowAndRun()
+    w.Show()
+	
 }

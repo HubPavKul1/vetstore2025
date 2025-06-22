@@ -5,6 +5,7 @@ import (
 	"os"
 
 	"github.com/HubPavKul1/vetstore2025/internal/db"
+	"github.com/HubPavKul1/vetstore2025/internal/ui"
 	customwindows "github.com/HubPavKul1/vetstore2025/internal/ui/customWindows"
 	// "fyne.io/fyne/v2/app"
 )
@@ -20,6 +21,7 @@ func main() {
     defer db.Close()
 
     customwindows.RunUI()
+    ui.MyApp.Run()
 
     os.Exit(0)
 }
