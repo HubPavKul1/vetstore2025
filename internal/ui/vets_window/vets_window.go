@@ -1,4 +1,4 @@
-package customwindows
+package vets_window
 
 import (
 
@@ -14,7 +14,7 @@ import (
 func ShowVetsWindow() {
 
     w := ui.MyApp.NewWindow("Ветврачи")
-	w.Resize(ui.WindowSize)
+	w.Resize(ui.WindowMinSize)
 	w.CenterOnScreen()
 
     label := canvas.NewText("ВЕТВРАЧИ", ui.WindowTitleColor)

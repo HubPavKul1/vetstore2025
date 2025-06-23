@@ -12,13 +12,16 @@ import (
 
 
 func CreateColoredButton(c color.RGBA, b *widget.Button, btnText *canvas.Text) *fyne.Container {
-	r := canvas.NewRectangle(c)
-	r.StrokeWidth = 0
+	r := canvas.NewRectangle(MenuButtonColor)
+	r.StrokeWidth = 1
+	r.StrokeColor = c
+
+	btnText.Alignment = fyne.TextAlignCenter
 
 	button := container.New(
 		layout.NewStackLayout(),
-		b,
 		r,
+		b,
 		btnText,
 		
 
@@ -26,4 +29,13 @@ func CreateColoredButton(c color.RGBA, b *widget.Button, btnText *canvas.Text) *
 
 	return button
 
+}
+
+func CreateWindowTitle(title string, c color.RGBA) *canvas.Text {
+	text := canvas.NewText(title, c)
+	text.TextSize = 50
+	text.Alignment = fyne.TextAlignCenter
+	text.TextStyle = fyne.TextStyle{Bold: true}
+	
+	return text
 }
