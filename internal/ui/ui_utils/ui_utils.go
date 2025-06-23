@@ -1,4 +1,4 @@
-package ui
+package ui_utils
 
 import (
 	"image/color"
@@ -38,4 +38,33 @@ func CreateWindowTitle(title string, c color.RGBA) *canvas.Text {
 	text.TextStyle = fyne.TextStyle{Bold: true}
 	
 	return text
+}
+
+
+func CreateNavWindowContent(img *fyne.Container, title string, menu *fyne.Container) *fyne.Container {
+	window_title := CreateWindowTitle(title, WindowTitleColor)
+	c := container.NewVBox(
+		container.NewCenter(img),
+		window_title,
+		widget.NewLabel(""),
+		container.NewCenter(menu),
+	)
+
+	return c
+}
+
+func CreateBtnMenu(btns []*widget.Button) *fyne.Container {
+
+	menu_box := container.NewVBox()
+
+	for _, el := range btns {
+		menu_box.Add(el)
+	}
+
+	menu_wrapper := container.New(
+		layout.NewGridWrapLayout(MenuButtonSize),
+		menu_box,
+	)
+
+	return menu_wrapper
 }

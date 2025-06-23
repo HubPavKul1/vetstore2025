@@ -1,33 +1,23 @@
 package main_window
 
 import (
-	"fyne.io/fyne/v2/container"
-	"fyne.io/fyne/v2/widget"
 
 	"github.com/HubPavKul1/vetstore2025/internal/ui"
+	"github.com/HubPavKul1/vetstore2025/internal/ui/ui_utils"
 )
 
 func RunUI() {
 
     w := ui.MyApp.NewWindow("Вет склад 2025")
+	w.Resize(ui_utils.WindowMinSize)
 	w.SetMaster()
 	
 	w.CenterOnScreen()
 
-	img := MainImage(ui.MainImageSize)
-
-	title := ui.CreateWindowTitle("ДОБРО ПОЖАЛОВАТЬ НА ВЕТСКЛАД", ui.WindowTitleColor)
-
+	img := MainImage(ui_utils.MainImageSize)
 	menu := MainMenu(w)
 
-	content := container.NewVBox(
-		container.NewCenter(img),
-		title,
-		widget.NewLabel(""),
-		container.NewCenter(menu),
-
-	)
-
+	content := ui_utils.CreateNavWindowContent(img, "ДОБРО ПОЖАЛОВАТЬ НА ВЕТСКЛАД", menu)
 
     w.SetContent(content)
    

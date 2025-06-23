@@ -1,4 +1,4 @@
-package customwindows
+package dialogs
 
 import (
 	"fmt"
