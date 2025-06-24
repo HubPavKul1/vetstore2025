@@ -1,43 +1,26 @@
-package dialogs
+package catalogs
 
 import (
 	"log"
 
+	"fyne.io/fyne/v2/dialog"
 	"fyne.io/fyne/v2"
 	"fyne.io/fyne/v2/container"
 	"fyne.io/fyne/v2/widget"
-	"github.com/HubPavKul1/vetstore2025/internal/db"
 	"github.com/HubPavKul1/vetstore2025/internal/db/models"
-	"github.com/HubPavKul1/vetstore2025/internal/db/repository"
-	service "github.com/HubPavKul1/vetstore2025/internal/services"
-	"github.com/HubPavKul1/vetstore2025/internal/ui"
+	"github.com/HubPavKul1/vetstore2025/internal/services"
+	"github.com/HubPavKul1/vetstore2025/internal/ui/app"
 )
 
 // AddItemDialog создает диалоговое окно для добавления товара
 func AddSubCategoryDialog(parent fyne.Window) {
     // Создаем новое окно
-    dialog := ui.MyApp.NewWindow("Добавить подкатегорию")
-
-	categories, err := service.GetCategoriesService()
-	if err != nil {
-		log.Panic("Ошибка получения категорий")
-		return
-	} 
-	var cats []string
-	for _, cat := range categories {
-		cats = append(cats, cat.Name)
-	}
-
-	
-	
+    dialog_win := app.MyApp.NewWindow("Добавить подкатегорию")
 
     // Поле для ввода данных
-	categorySelect := widget.NewSelect([]string{}, func(s string) {})
-    categorySelect.PlaceHolder = "Выберите категорию товара"
-	categorySelect.SetOptions(cats)
+	categoryNames, categories:= CreateCategorySelectOptions(parent)
+    categorySelect := widget.NewSelect(categoryNames, func(s string) {})
     nameEntry := widget.NewEntry()
-	
-   
 
     // Кнопка для подтверждения
     saveButton := widget.NewButton("Сохранить", func() {
@@ -56,19 +39,17 @@ func AddSubCategoryDialog(parent fyne.Window) {
 		// Создаем новую подкатегорию
         newSubCategory := models.SubCategory{Name: name, CategoryID: categoryID}
 
-        // Сохраняем товар в базе данных
-        _, err := repository.CreateSubCategory(db.DB, newSubCategory)
+        // Сохраняем подкатегорию в базе данных
+        _, err := services.CreateSubCategoryService(newSubCategory)
         if err != nil {
             log.Panic(err, parent)
             return
         }
 
-	
-
-
+        dialog.ShowInformation("", "Подкатегория успешно создана!", parent,)
 
         // Закрываем окно
-        dialog.Close()
+        dialog_win.Close()
 
         // Обновляем список товаров в главном окне
         // (здесь нужно реализовать логику обновления списка)
@@ -84,8 +65,8 @@ func AddSubCategoryDialog(parent fyne.Window) {
     )
 
     // Устанавливаем контент окна
-    dialog.SetContent(content)
+    dialog_win.SetContent(content)
 
     // Показываем окно
-    dialog.Show()
+    dialog_win.Show()
 }

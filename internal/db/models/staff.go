@@ -1,14 +1,29 @@
 package models
 
 import (
+	"fmt"
+
 	"github.com/HubPavKul1/vetstore2025/internal/utils"
 	"gorm.io/gorm"
 )
 
 
+type Address struct {
+	gorm.Model
+	Index string `gorm:"uniqueIndex"`
+	City string `gorm:"default:'Иваново'"`
+	Street string 
+	HouseNumber string
+	PhoneNumber1 string
+	PhoneNumber2 string `gorm:"null"`
+	EMail string `gorm:"null"`
+	Departments []Department
+}
+
 type Department struct {
 	gorm.Model
 	Name string
+	AddressID uint
 	Employees []Employee
 	MovingsFromStore []MovingFromStore
 
@@ -16,7 +31,7 @@ type Department struct {
 
 type Position struct {
 	gorm.Model
-	Name string
+	Name string 
 	Employees []Employee
 }
 
@@ -32,11 +47,15 @@ type Employee struct {
 
 func(e Employee)GetFullName()string {
 	
-	return e.LastName + " " + e.FirstName + " " + e.Patronymic
+	return fmt.Sprintf("%s %s %s", e.LastName, e.FirstName, e.Patronymic)
 }
 
 func(e Employee)GetShortName()string {
 	firstNameLetter := utils.FirstLetterFromString(e.FirstName)
 	firstPatrLetter := utils.FirstLetterFromString(e.Patronymic)
-	return e.LastName + " " + firstNameLetter + ". " + firstPatrLetter + "."
+	return fmt.Sprintf("%s %s. %s.",e.LastName, firstNameLetter, firstPatrLetter)
+}
+
+func(a Address)GetAddressString()string {
+	return fmt.Sprintf("%s, г. %s, ул.%s, д. %s", a.Index, a.City, a.Street, a.HouseNumber)
 }

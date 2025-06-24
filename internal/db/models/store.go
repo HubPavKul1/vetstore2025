@@ -11,7 +11,7 @@ import (
 type Supplier struct {
 	gorm.Model
 	Name string
-	Phone string
+	PhoneNumber string `gorm:"null"`
 	ProductReceipts []ProductReceipt
 }
 
@@ -20,6 +20,8 @@ type ProductReceipt struct {
 	gorm.Model
 	ReceiptDate time.Time
 	SupplierID uint
+	InvoiceNumber string `gorm:"null"`
+	InvoiceFile []byte `gorm:"null"`
 	ProductsInStore []ProductInStore
 }
 
@@ -28,9 +30,9 @@ type ProductInStore struct {
 	gorm.Model
 	ProductID uint
 	ProductReceiptID uint
-	PackagingAmount int
-	UnitAmount float64
-	Cost float64
+	PackagingAmount int `gorm:"default:0"`
+	UnitAmount float64	`gorm:"default:0.0"`
+	Cost float64 `gorm:"default:0.0"`
 
 }
 // Метод расчета цены товара

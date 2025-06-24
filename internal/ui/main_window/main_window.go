@@ -1,18 +1,12 @@
 package main_window
 
 import (
-
-	"github.com/HubPavKul1/vetstore2025/internal/ui"
 	"github.com/HubPavKul1/vetstore2025/internal/ui/ui_utils"
 )
 
 func RunUI() {
 
-    w := ui.MyApp.NewWindow("ВЕТСКЛАД 2025")
-	w.Resize(ui_utils.WindowMinSize)
-	w.SetMaster()
-	
-	w.CenterOnScreen()
+	w := ui_utils.CreateNewWindow("ВЕТСКЛАД 2025", true)
 
 	img := ui_utils.CreateWindowImage("static/drugs.png")
 	menu := CreateMainMenu(w)

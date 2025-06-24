@@ -8,6 +8,7 @@ import (
 	"fyne.io/fyne/v2/container"
 	"fyne.io/fyne/v2/layout"
 	"fyne.io/fyne/v2/widget"
+	"github.com/HubPavKul1/vetstore2025/internal/ui/app"
 )
 
 
@@ -29,6 +30,18 @@ func CreateColoredButton(c color.RGBA, b *widget.Button, btnText *canvas.Text) *
 
 	return button
 
+}
+
+func CreateNewWindow(title string, isMaster bool) fyne.Window{
+	w := app.MyApp.NewWindow(title)
+	w.CenterOnScreen()
+	w.Resize(WindowMinSize)
+	
+	if isMaster {
+		w.SetMaster()
+	}
+
+	return w
 }
 
 func CreateWindowTitle(title string) *canvas.Text {
@@ -77,8 +90,6 @@ func CreateBtnMenu(btns []*widget.Button) *fyne.Container {
 func CreateWindowImage(image_path string) *fyne.Container {
 	img := canvas.NewImageFromFile(image_path)
 	// img.FillMode = canvas.ImageFillContain
-	
-
 
 	img_wrapper := container.NewGridWrap(WindowImageSize, img)
 	

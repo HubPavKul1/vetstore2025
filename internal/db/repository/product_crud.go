@@ -29,6 +29,15 @@ func GetSubCategories(db *gorm.DB) ([]models.SubCategory, error) {
 	return subCategories, result.Error
 }
 
+func GetSubCategoriesForCategory(db *gorm.DB, catId uint) ([]models.SubCategory, error) {
+	 // Получаем категорию
+    var category models.Category
+    result := db.Preload("SubCategories").First(&category, catId)
+
+	return category.SubCategories, result.Error
+
+}
+
 // Упаковка
 func CreatePackaging(db *gorm.DB, pack models.Packaging) (*models.Packaging, error) {
 	result := db.Create(&pack)
@@ -63,6 +72,13 @@ func GetProducts(db *gorm.DB) ([]models.Product, error) {
 	var products []models.Product
 	result := db.Find(&products)
 	return products, result.Error
+}
+
+func GetProductsForSubCategory(db *gorm.DB, subcatId uint) ([]models.Product, error) {
+	var subcat models.SubCategory
+	result := db.Preload("Products").First(subcat, subcatId)
+
+	return subcat.Products, result.Error
 }
 
 

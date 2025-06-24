@@ -1,17 +1,12 @@
 package store_window
 
-
 import (
-
-	"github.com/HubPavKul1/vetstore2025/internal/ui"
 	"github.com/HubPavKul1/vetstore2025/internal/ui/ui_utils"
 )
 
 func ShowStoreWindow() {
 
-    w := ui.MyApp.NewWindow("ВЕТСКЛАД")
-	w.Resize(ui_utils.WindowMinSize)
-	w.CenterOnScreen()
+	w := ui_utils.CreateNewWindow("ВЕТСКЛАД", false)
 
 	img := ui_utils.CreateWindowImage("static/drugs.png")
 
