@@ -31,8 +31,8 @@ func CreateColoredButton(c color.RGBA, b *widget.Button, btnText *canvas.Text) *
 
 }
 
-func CreateWindowTitle(title string, c color.RGBA) *canvas.Text {
-	text := canvas.NewText(title, c)
+func CreateWindowTitle(title string) *canvas.Text {
+	text := canvas.NewText(title, WindowTitleColor)
 	text.TextSize = 50
 	text.Alignment = fyne.TextAlignCenter
 	text.TextStyle = fyne.TextStyle{Bold: true}
@@ -42,8 +42,12 @@ func CreateWindowTitle(title string, c color.RGBA) *canvas.Text {
 
 
 func CreateNavWindowContent(img *fyne.Container, title string, menu *fyne.Container) *fyne.Container {
-	window_title := CreateWindowTitle(title, WindowTitleColor)
+	window_title := CreateWindowTitle(title)
+	top_padding := canvas.NewText("", color.Transparent)
+	top_padding.TextSize = 10
+	
 	c := container.NewVBox(
+		top_padding,
 		container.NewCenter(img),
 		window_title,
 		widget.NewLabel(""),
@@ -67,4 +71,17 @@ func CreateBtnMenu(btns []*widget.Button) *fyne.Container {
 	)
 
 	return menu_wrapper
+}
+
+
+func CreateWindowImage(image_path string) *fyne.Container {
+	img := canvas.NewImageFromFile(image_path)
+	// img.FillMode = canvas.ImageFillContain
+	
+
+
+	img_wrapper := container.NewGridWrap(WindowImageSize, img)
+	
+	
+	return img_wrapper
 }

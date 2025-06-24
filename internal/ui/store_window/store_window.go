@@ -1,4 +1,5 @@
-package main_window
+package store_window
+
 
 import (
 
@@ -6,21 +7,20 @@ import (
 	"github.com/HubPavKul1/vetstore2025/internal/ui/ui_utils"
 )
 
-func RunUI() {
+func ShowStoreWindow() {
 
-    w := ui.MyApp.NewWindow("ВЕТСКЛАД 2025")
+    w := ui.MyApp.NewWindow("ВЕТСКЛАД")
 	w.Resize(ui_utils.WindowMinSize)
-	w.SetMaster()
-	
 	w.CenterOnScreen()
 
 	img := ui_utils.CreateWindowImage("static/drugs.png")
-	menu := CreateMainMenu(w)
 
-	content := ui_utils.CreateNavWindowContent(img, "ДОБРО ПОЖАЛОВАТЬ НА ВЕТСКЛАД", menu)
+	title := "ВЕТСКЛАД"
+	
+
+    content := ui_utils.CreateNavWindowContent(img, title, CreateStoreMenu(w),)
 
     w.SetContent(content)
    
     w.Show()
-	
 }
