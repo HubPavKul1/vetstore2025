@@ -1,6 +1,8 @@
 package repository
 
 import (
+	"log"
+
 	"github.com/HubPavKul1/vetstore2025/internal/db/models"
 	"gorm.io/gorm"
 )
@@ -29,10 +31,25 @@ func GetSubCategories(db *gorm.DB) ([]models.SubCategory, error) {
 	return subCategories, result.Error
 }
 
-func GetSubCategoriesForCategory(db *gorm.DB, catId uint) ([]models.SubCategory, error) {
+// func GetSubCategoriesForCategory(db *gorm.DB, catId uint) ([]models.SubCategory, error) {
+// 	 // Получаем категорию
+//     var category models.Category
+//     result := db.Preload("SubCategories").First(&category, catId)
+// 	log.Println("result category with subcats: ", result)
+// 	log.Println("category subcats: ", category.SubCategories)
+
+
+// 	return category.SubCategories, result.Error
+
+// }
+
+func GetSubCategoriesForCategory(db *gorm.DB, catName string) ([]models.SubCategory, error) {
 	 // Получаем категорию
     var category models.Category
-    result := db.Preload("SubCategories").First(&category, catId)
+    result := db.Preload("SubCategories").First(&category, "categories.Name = ?", catName)
+	log.Println("result category with subcats: ", result)
+	log.Println("category subcats: ", category.SubCategories)
+
 
 	return category.SubCategories, result.Error
 
@@ -74,9 +91,9 @@ func GetProducts(db *gorm.DB) ([]models.Product, error) {
 	return products, result.Error
 }
 
-func GetProductsForSubCategory(db *gorm.DB, subcatId uint) ([]models.Product, error) {
+func GetProductsForSubCategory(db *gorm.DB, subcatName string) ([]models.Product, error) {
 	var subcat models.SubCategory
-	result := db.Preload("Products").First(subcat, subcatId)
+	result := db.Preload("Products").First(&subcat, "subcategories.Name = ?", subcatName)
 
 	return subcat.Products, result.Error
 }

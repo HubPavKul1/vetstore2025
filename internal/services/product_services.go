@@ -23,10 +23,13 @@ func GetSubCategoriesService() ([]models.SubCategory, error) {
     return repository.GetSubCategories(db.DB)
 }
 
-func GetSubCategoriesForCategory(categoryId uint) ([]models.SubCategory, error) {
-    return repository.GetSubCategoriesForCategory(db.DB, categoryId)
-}
+// func GetSubCategoriesForCategory(categoryId uint) ([]models.SubCategory, error) {
+//     return repository.GetSubCategoriesForCategory(db.DB, categoryId)
+// }
 
+func GetSubCategoriesForCategory(categoryName string) ([]models.SubCategory, error) {
+    return repository.GetSubCategoriesForCategory(db.DB, categoryName)
+}
 // Товары (номенклатура)
 func CreateProductService(prod models.Product) (*models.Product, error) {
     return repository.CreateProduct(db.DB, prod)
@@ -36,8 +39,8 @@ func GetProductsService() ([]models.Product, error) {
     return repository.GetProducts(db.DB)
 }
 
-func GetProductsForSubCategoryService(subcategoryId uint) ([]models.Product, error) {
-    return repository.GetProductsForSubCategory(db.DB, subcategoryId)
+func GetProductsForSubCategoryService(subcategoryName string) ([]models.Product, error) {
+    return repository.GetProductsForSubCategory(db.DB, subcategoryName)
 }
 
 //Упаковка

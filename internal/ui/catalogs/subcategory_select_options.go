@@ -9,32 +9,18 @@ import (
 )
 
 
-
 func CreateSubCategorySelectOptions(w fyne.Window, categoryName string) ([]string, []models.SubCategory ){
 
-	categories, er := services.GetCategoriesService()
-	if er != nil {
-		dialog.NewError(er, w)
-	}
-    var categoryID uint
-    for _, category := range categories {
-    	if category.Name == categoryName {
-            categoryID = category.ID
-            break
-        }
-    }
 
-	subcategories, err := services.GetSubCategoriesForCategory(categoryID)
+	subcategories, err := services.GetSubCategoriesForCategory(categoryName)
 	if err != nil {
 		dialog.NewError(err, w)
 	}
-	var subcats []string
+	var subcatNames []string
 	for _, subcat := range subcategories {
-		subcats = append(subcats, subcat.Name)
+		subcatNames = append(subcatNames, subcat.Name)
 	}
 
-
-
-	return subcats, subcategories
+	return subcatNames, subcategories
 
 }
