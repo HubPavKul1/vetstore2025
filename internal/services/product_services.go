@@ -23,9 +23,6 @@ func GetSubCategoriesService() ([]models.SubCategory, error) {
     return repository.GetSubCategories(db.DB)
 }
 
-// func GetSubCategoriesForCategory(categoryId uint) ([]models.SubCategory, error) {
-//     return repository.GetSubCategoriesForCategory(db.DB, categoryId)
-// }
 
 func GetSubCategoriesForCategory(categoryName string) ([]models.SubCategory, error) {
     return repository.GetSubCategoriesForCategory(db.DB, categoryName)

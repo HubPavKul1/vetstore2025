@@ -1,29 +1,23 @@
 package models
 
-import (
-	"gorm.io/gorm"
-)
 
 // Категория товара
 type Category struct {
-    gorm.Model
-    Name      string
+    BaseModel
 	SubCategories []SubCategory
     
 }
 
 // Подкатегория товара
 type SubCategory struct {
-    gorm.Model
-    Name        string
+    BaseModel
     CategoryID 	uint
 	Products []Product
 }
 
 // Товар номенклатура
 type Product struct {
-	gorm.Model
-	Name string
+	BaseModel
 	SubCategoryID uint
 	ProductsInStore []ProductInStore
 	PackagingID uint
@@ -32,15 +26,13 @@ type Product struct {
 
 // Наименование упаковки товара
 type Packaging struct {
-	gorm.Model
-	Name string
+	BaseModel
 	Products []Product
 }
 
 // Наименование единиц учета
 type Unit struct {
-	gorm.Model
-	Name string
+	BaseModel
 	Products []Product
 }
 

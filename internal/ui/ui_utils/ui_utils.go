@@ -2,6 +2,7 @@ package ui_utils
 
 import (
 	"image/color"
+	"strings"
 
 	"fyne.io/fyne/v2"
 	"fyne.io/fyne/v2/canvas"
@@ -33,7 +34,7 @@ func CreateColoredButton(c color.RGBA, b *widget.Button, btnText *canvas.Text) *
 }
 
 func CreateNewWindow(title string, isMaster bool) fyne.Window{
-	w := app.MyApp.NewWindow(title)
+	w := app.MyApp.NewWindow(strings.ToUpper(title))
 	w.CenterOnScreen()
 	w.Resize(WindowMinSize)
 	
@@ -45,7 +46,7 @@ func CreateNewWindow(title string, isMaster bool) fyne.Window{
 }
 
 func CreateWindowTitle(title string) *canvas.Text {
-	text := canvas.NewText(title, WindowTitleColor)
+	text := canvas.NewText(strings.ToUpper(title), WindowTitleColor)
 	text.TextSize = 50
 	text.Alignment = fyne.TextAlignCenter
 	text.TextStyle = fyne.TextStyle{Bold: true}
@@ -55,7 +56,7 @@ func CreateWindowTitle(title string) *canvas.Text {
 
 
 func CreateNavWindowContent(img *fyne.Container, title string, menu *fyne.Container) *fyne.Container {
-	window_title := CreateWindowTitle(title)
+	window_title := CreateWindowTitle(strings.ToUpper(title))
 	top_padding := canvas.NewText("", color.Transparent)
 	top_padding.TextSize = 10
 	

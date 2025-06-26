@@ -1,21 +1,19 @@
 package catalogs
 
 import (
-	"log"
-
-	"fyne.io/fyne/v2/dialog"
 	"fyne.io/fyne/v2"
 	"fyne.io/fyne/v2/container"
+	"fyne.io/fyne/v2/dialog"
 	"fyne.io/fyne/v2/widget"
 	"github.com/HubPavKul1/vetstore2025/internal/db/models"
 	"github.com/HubPavKul1/vetstore2025/internal/services"
-	"github.com/HubPavKul1/vetstore2025/internal/ui/app"
+	"github.com/HubPavKul1/vetstore2025/internal/ui/dialogs"
 )
 
 // AddItemDialog создает диалоговое окно для добавления товара
 func AddSubCategoryDialog(parent fyne.Window) {
     // Создаем новое окно
-    dialog_win := app.MyApp.NewWindow("Добавить подкатегорию")
+    dialog_win := dialogs.CreateAddDataDialog(parent, "Добавить подкатегорию")
 
     // Поле для ввода данных
 	categoryNames, categories:= CreateCategorySelectOptions(parent)
@@ -37,16 +35,18 @@ func AddSubCategoryDialog(parent fyne.Window) {
             }
         }
 		// Создаем новую подкатегорию
-        newSubCategory := models.SubCategory{Name: name, CategoryID: categoryID}
+        newSubCategory := models.SubCategory{}
+        newSubCategory.Name = name
+        newSubCategory.CategoryID = categoryID
 
         // Сохраняем подкатегорию в базе данных
         _, err := services.CreateSubCategoryService(newSubCategory)
         if err != nil {
-            log.Panic(err, parent)
+            dialog.NewError(err, parent).Show()
             return
         }
 
-        dialog.ShowInformation("", "Подкатегория успешно создана!", parent,)
+        dialogs.SuccessAddDataDialog(parent).Show()
 
         // Закрываем окно
         dialog_win.Close()

@@ -1,43 +1,43 @@
 package catalogs
 
 import (
-	"fyne.io/fyne/v2/dialog"
 	"fyne.io/fyne/v2"
 	"fyne.io/fyne/v2/container"
+	"fyne.io/fyne/v2/dialog"
 	"fyne.io/fyne/v2/widget"
+
 	"github.com/HubPavKul1/vetstore2025/internal/db/models"
 	"github.com/HubPavKul1/vetstore2025/internal/services"
 	"github.com/HubPavKul1/vetstore2025/internal/ui/dialogs"
 )
 
 // AddItemDialog создает диалоговое окно для добавления товара
-func AddCategoryDialog(parent fyne.Window) {
-    // Создаем новое окно
-    dialog_win := dialogs.CreateAddDataDialog(parent, "Добавить категорию товара")
+func AddUnitsDialog(parent fyne.Window) {
+    
+    w := dialogs.CreateAddDataDialog(parent, "Добавить единицу учета товара")
 
-    // Поле для ввода данных
     nameEntry := widget.NewEntry()
-   
+    nameEntry.PlaceHolder = "ВВЕДИТЕ НАИМЕНОВАНИЕ ЕДИНИЦЫ УЧЕТА ТОВАРА"
 
     // Кнопка для подтверждения
-    saveButton := widget.NewButton("Сохранить", func() {
+    saveButton := widget.NewButton("СОХРАНИТЬ", func() {
         // Получаем введенные данные
         name := nameEntry.Text
 
-        // Создаем новую категорию
-        newCategory := models.Category{}
-        newCategory.Name = name
+        // Создаем новую упаковку
+        newUnit := models.Unit{}
+        newUnit.Name = name
 
         // Сохраняем товар в базе данных
-        _, err := services.CreateCategoryService(newCategory)
+        _, err := services.CreateUnitService(newUnit)
         if err != nil {
             dialog.NewError(err, parent).Show()
             return
         } 
-        dialogs.SuccessAddDataDialog(parent).Show() 
+        dialogs.SuccessAddDataDialog(parent).Show()
             
         // Закрываем окно
-        dialog_win.Close()
+        w.Close()
 
 
         // Обновляем список товаров в главном окне
@@ -51,8 +51,8 @@ func AddCategoryDialog(parent fyne.Window) {
     )
 
     // Устанавливаем контент окна
-    dialog_win.SetContent(content)
+    w.SetContent(content)
 
     // Показываем окно
-    dialog_win.Show()
+    w.Show()
 }

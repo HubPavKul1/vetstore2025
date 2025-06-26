@@ -21,8 +21,7 @@ type Address struct {
 }
 
 type Department struct {
-	gorm.Model
-	Name string
+	BaseModel
 	AddressID uint
 	Employees []Employee
 	MovingsFromStore []MovingFromStore
@@ -30,8 +29,7 @@ type Department struct {
 }
 
 type Position struct {
-	gorm.Model
-	Name string 
+	BaseModel
 	Employees []Employee
 }
 

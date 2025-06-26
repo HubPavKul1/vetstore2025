@@ -9,8 +9,7 @@ import (
 
 // Поставщики
 type Supplier struct {
-	gorm.Model
-	Name string
+	BaseModel
 	PhoneNumber string `gorm:"null"`
 	ProductReceipts []ProductReceipt
 }
