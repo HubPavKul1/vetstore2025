@@ -3,6 +3,7 @@ package catalogs
 import (
 	"log"
 
+	"fyne.io/fyne/v2"
 	"fyne.io/fyne/v2/container"
 	"fyne.io/fyne/v2/widget"
 
@@ -15,6 +16,8 @@ import (
 func AddProduct() {
     // Создаем новое окно
     w := ui_utils.CreateNewWindow("ДОБАВИТЬ ТОВАР В КАТАЛОГ", false)
+
+    updateCategoryChan := make(chan bool)
 
     catNames, _ := CreateCategorySelectOptions(w)
 
@@ -32,7 +35,7 @@ func AddProduct() {
     })
     cat_select.PlaceHolder = "ВЫБЕРИТЕ КАТЕГОРИЮ ТОВАРА"
 
-    addCategoryBtn := widget.NewButton("ДОБАВИТЬ КАТЕГОРИЮ ТОВАРА", func() {AddCategoryDialog(w)})
+    addCategoryBtn := widget.NewButton("ДОБАВИТЬ КАТЕГОРИЮ ТОВАРА", func() {AddCategoryDialog(w, updateCategoryChan)})
 
     
     addSubcatBtn := widget.NewButton("ДОБАВИТЬ ПОДКАТЕГОРИЮ ТОВАРА", func() {AddSubCategoryDialog(w)})
@@ -126,6 +129,14 @@ func AddProduct() {
 
     // Устанавливаем контент окна
     w.SetContent(content)
+
+    go func() {
+        for range updateCategoryChan {
+            catNames, _ := CreateCategorySelectOptions(w)
+            fyne.Do(func() {cat_select.SetOptions(catNames)})
+           
+        }
+    }()
 
     // Показываем окно
     w.Show()

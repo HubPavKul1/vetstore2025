@@ -11,7 +11,7 @@ import (
 )
 
 // AddItemDialog создает диалоговое окно для добавления товара
-func AddCategoryDialog(parent fyne.Window) {
+func AddCategoryDialog(parent fyne.Window, updateChan chan<- bool) {
     // Создаем новое окно
     dialog_win := dialogs.CreateAddDataDialog(parent, "Добавить категорию товара")
 
@@ -35,6 +35,7 @@ func AddCategoryDialog(parent fyne.Window) {
             return
         } 
         dialogs.SuccessAddDataDialog(parent).Show() 
+        updateChan <- true
             
         // Закрываем окно
         dialog_win.Close()
