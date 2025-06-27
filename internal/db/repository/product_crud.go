@@ -19,6 +19,12 @@ func GetCategories(db *gorm.DB) ([]models.Category, error) {
     return categories, result.Error
 }
 
+func CetCategoryIDByName(db *gorm.DB, catName string) (uint, error) {
+	var category models.Category
+	result := db.First(&category, "categories.Name = ?", catName)
+	return category.ID, result.Error
+}
+
 // Подкатегории
 func CreateSubCategory(db *gorm.DB, subCat models.SubCategory) (*models.SubCategory, error) {
 	result := db.Create(&subCat)
@@ -31,17 +37,12 @@ func GetSubCategories(db *gorm.DB) ([]models.SubCategory, error) {
 	return subCategories, result.Error
 }
 
-// func GetSubCategoriesForCategory(db *gorm.DB, catId uint) ([]models.SubCategory, error) {
-// 	 // Получаем категорию
-//     var category models.Category
-//     result := db.Preload("SubCategories").First(&category, catId)
-// 	log.Println("result category with subcats: ", result)
-// 	log.Println("category subcats: ", category.SubCategories)
+func CetSubCategoryIDByName(db *gorm.DB, subcatName string) (uint, error) {
+	var subcategory models.SubCategory
+	result := db.First(&subcategory, "sub_categories.Name = ?", subcatName)
+	return subcategory.ID, result.Error
+}
 
-
-// 	return category.SubCategories, result.Error
-
-// }
 
 func GetSubCategoriesForCategory(db *gorm.DB, catName string) ([]models.SubCategory, error) {
 	 // Получаем категорию
@@ -67,6 +68,12 @@ func GetPackagings(db *gorm.DB) ([]models.Packaging, error) {
 	return packs, result.Error
 }
 
+func CetPackagingIDByName(db *gorm.DB, packName string) (uint, error) {
+	var pack models.Packaging
+	result := db.First(&pack, "packagings.Name = ?", packName)
+	return pack.ID, result.Error
+}
+
 // Единицы учета
 func CreateUnit(db *gorm.DB, unit models.Unit) (*models.Unit, error) {
 	result := db.Create(&unit)
@@ -77,6 +84,12 @@ func GetUnits(db *gorm.DB) ([]models.Unit, error) {
 	var units []models.Unit
 	result := db.Find(&units)
 	return units, result.Error
+}
+
+func CetUnitIDByName(db *gorm.DB, unitName string) (uint, error) {
+	var unit models.Unit
+	result := db.First(&unit, "units.Name = ?", unitName)
+	return unit.ID, result.Error
 }
 
 // Товар

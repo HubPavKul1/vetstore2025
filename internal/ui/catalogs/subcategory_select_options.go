@@ -4,23 +4,31 @@ import (
 
 	"fyne.io/fyne/v2"
 	"fyne.io/fyne/v2/dialog"
-	"github.com/HubPavKul1/vetstore2025/internal/db/models"
 	"github.com/HubPavKul1/vetstore2025/internal/services"
 )
 
 
-func CreateSubCategorySelectOptions(w fyne.Window, categoryName string) ([]string, []models.SubCategory ){
+func CreateSubCategorySelectOptions(w fyne.Window, categoryName string) ([]string){
 
-
-	subcategories, err := services.GetSubCategoriesForCategory(categoryName)
+	subcategories, err := services.GetSubCategoriesForCategoryService(categoryName)
 	if err != nil {
-		dialog.NewError(err, w)
+		dialog.NewError(err, w).Show()
 	}
 	var subcatNames []string
 	for _, subcat := range subcategories {
 		subcatNames = append(subcatNames, subcat.Name)
 	}
 
-	return subcatNames, subcategories
+	return subcatNames
 
+}
+
+
+func GetSubcatID(w fyne.Window, subcatName string) uint {
+	subcatID, err := services.GetSubCategoryIDBYNameService(subcatName)
+	if err != nil {
+		dialog.NewError(err, w).Show()
+	}
+	
+	return subcatID
 }

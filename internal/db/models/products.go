@@ -21,7 +21,7 @@ type Product struct {
 	SubCategoryID uint
 	ProductsInStore []ProductInStore
 	PackagingID uint
-	UnitID uint
+	UnitID uint 
 }
 
 // Наименование упаковки товара

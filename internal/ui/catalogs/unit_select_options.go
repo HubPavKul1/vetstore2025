@@ -3,13 +3,11 @@ package catalogs
 import (
 	"fyne.io/fyne/v2"
 	"fyne.io/fyne/v2/dialog"
-	"fyne.io/fyne/v2/widget"
-	"github.com/HubPavKul1/vetstore2025/internal/db/models"
 	"github.com/HubPavKul1/vetstore2025/internal/services"
 )
 
 
-func CreateUnitsSelect(w fyne.Window) (*widget.Select, []models.Unit){
+func CreateUnitSelectOptions(w fyne.Window) []string {
 	units, err := services.GetUnitsService()
 	if err != nil {
 		dialog.NewError(err, w)
@@ -21,8 +19,15 @@ func CreateUnitsSelect(w fyne.Window) (*widget.Select, []models.Unit){
 		unitNames = append(unitNames, unit.Name)
 	}
 
-	units_select := widget.NewSelect(unitNames, func(s string) {})
-	units_select.PlaceHolder = "Выберите упаковку"
+	return unitNames
+}
 
-	return units_select, units
+func GetUnitID(w fyne.Window, unitName string) uint {
+	unitID, err := services.GetUnitIDBYNameService(unitName)
+	if err != nil {
+		dialog.NewError(err, w).Show()
+	}
+
+	return unitID
+
 }

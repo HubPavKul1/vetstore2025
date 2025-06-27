@@ -3,23 +3,32 @@ package catalogs
 import (
 	"fyne.io/fyne/v2"
 	"fyne.io/fyne/v2/dialog"
-	"github.com/HubPavKul1/vetstore2025/internal/db/models"
 	"github.com/HubPavKul1/vetstore2025/internal/services"
 )
 
 
-func CreateCategorySelectOptions(w fyne.Window) ([]string, []models.Category ){
+func CreateCategorySelectOptions(w fyne.Window) ([]string ){
 	categories, err := services.GetCategoriesService()
 	if err != nil {
-		dialog.NewError(err, w)
+		dialog.NewError(err, w).Show()
 	}
 
 	var catNames []string
-
 	for _, cat := range categories {
 		catNames = append(catNames, cat.Name)
 	}
 
-	return catNames, categories
+	return catNames
+}
+
+
+func GetCategoryID(w fyne.Window, catName string) uint {
+	catID, err := services.GetCategoryIDBYNameService(catName)
+	if err != nil {
+		dialog.NewError(err, w).Show()
+	}
+
+
+	return catID
 
 }

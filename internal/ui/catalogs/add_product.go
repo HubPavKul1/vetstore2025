@@ -3,12 +3,15 @@ package catalogs
 import (
 	"log"
 
-	"fyne.io/fyne/v2"
 	"fyne.io/fyne/v2/container"
+	"fyne.io/fyne/v2/dialog"
 	"fyne.io/fyne/v2/widget"
 
 	"github.com/HubPavKul1/vetstore2025/internal/db/models"
-	// "github.com/HubPavKul1/vetstore2025/internal/services"
+	"github.com/HubPavKul1/vetstore2025/internal/services"
+	"github.com/HubPavKul1/vetstore2025/internal/ui/dialogs"
+	"github.com/HubPavKul1/vetstore2025/internal/ui/entries"
+	"github.com/HubPavKul1/vetstore2025/internal/ui/selects"
 	"github.com/HubPavKul1/vetstore2025/internal/ui/ui_utils"
 )
 
@@ -17,127 +20,132 @@ func AddProduct() {
     // Создаем новое окно
     w := ui_utils.CreateNewWindow("ДОБАВИТЬ ТОВАР В КАТАЛОГ", false)
 
-    updateCategoryChan := make(chan bool)
+    updateCategoryChan := make(chan struct{})
+    updatePackagingChan := make(chan struct{})
+    updateUnitChan := make(chan struct{})
 
-    catNames, _ := CreateCategorySelectOptions(w)
+    catNames := CreateCategorySelectOptions(w)
+    packNames := CreatePackagingSelectOptions(w)
+    unitNames := CreateUnitSelectOptions(w)
 
-    var subcategories []models.SubCategory
+    pack_select := selects.CreateSelect(
+        &selects.CreateSelectParams{
+            Placeholder: "Выберите упаковку товара",
+            Options: packNames,
+        }, 
+    )
+    unit_select := selects.CreateSelect(
+        &selects.CreateSelectParams{
+            Placeholder: "Выберите единицу учета товара",
+            Options: unitNames,
+        },
+         
+    )
 
-    subcat_select := widget.NewSelect([]string{}, func(s string) {})
-    subcat_select.PlaceHolder = "ВЫБЕРИТЕ ПОДКАТЕГОРИЮ ТОВАРА"
+    subcat_select := selects.CreateSelect(
+        &selects.CreateSelectParams{
+            Placeholder: "Выберите подкатегорию товара",
+        },     
+    )
 
-    cat_select := widget.NewSelect(catNames, func(s string) {
-        
-        subcatNames, subcats := CreateSubCategorySelectOptions(w, s)
-        subcategories = subcats
+    cat_select := selects.CreateSelect(
+        &selects.CreateSelectParams{
+            Placeholder: "Выберите категорию товара",
+            Options: catNames,
+        },     
+    )
+
+    cat_select.OnChanged = func(s string) {
+        subcatNames := CreateSubCategorySelectOptions(w, s)
         subcat_select.SetOptions(subcatNames)
+    }
 
-    })
-    cat_select.PlaceHolder = "ВЫБЕРИТЕ КАТЕГОРИЮ ТОВАРА"
+    addCategoryBtn := widget.NewButton(
+        "ДОБАВИТЬ КАТЕГОРИЮ ТОВАРА", 
+        func() {AddCategoryDialog(w, updateCategoryChan)},
+    )
 
-    addCategoryBtn := widget.NewButton("ДОБАВИТЬ КАТЕГОРИЮ ТОВАРА", func() {AddCategoryDialog(w, updateCategoryChan)})
+    addSubcatBtn := widget.NewButton(
+        "ДОБАВИТЬ ПОДКАТЕГОРИЮ ТОВАРА", 
+        func() {AddSubCategoryDialog(w)},
+    )
 
-    
-    addSubcatBtn := widget.NewButton("ДОБАВИТЬ ПОДКАТЕГОРИЮ ТОВАРА", func() {AddSubCategoryDialog(w)})
+    addPackagingBtn := widget.NewButton(
+        "ДОБАВИТЬ УПАКОВКУ ТОВАРА", 
+        func() {AddPackagingDialog(w, updatePackagingChan)},
+    )
 
-    nameEntry := widget.NewEntry()
-    nameEntry.PlaceHolder = "Введите наименование товара"
+    addUnitBtn := widget.NewButton(
+        "ДОБАВИТЬ ЕДИНИЦУ УЧЕТА ТОВАРА", 
+        func() {AddUnitDialog(w, updateUnitChan)},
+    )
 
-    // pack_select, packs := CreatePackagingSelect(w)
-
-    // unit_select, units := CreateUnitsSelect(w)
-
+    nameEntry := entries.NameEntry("Введите наименование товара")
 
     // Кнопка для подтверждения
-    saveButton := widget.NewButton("Сохранить", func() {
+    saveButton := widget.NewButton("СОХРАНИТЬ", func() {
     	// Получаем введенные данные
-        // name := nameEntry.Text
-        
+        name := nameEntry.Text
         // Получаем выбранную подкатегорию
         selectedSubCategory := subcat_select.Selected
         log.Println("SElected SubCat: ", selectedSubCategory)
-        var subcategoryID uint
-        
-        for _, subcat := range subcategories {
-            if subcat.Name == selectedSubCategory {
-                subcategoryID = subcat.ID
-                break
-            }
-        }
+        subcategoryID := GetSubcatID(w, selectedSubCategory)
         log.Println("SubcatID for New Product: ", subcategoryID)
 
-        //Получаем ID упаковки
-        // selectedPackName := pack_select.Selected
-        // var packID uint
-        // for _, pack := range packs {
-        //     if pack.Name == selectedPackName {
-        //         packID = pack.ID
-        //         break
-        //     }
-        // }
+        // Получаем ID упаковки
+        selectedPackName := pack_select.Selected
+        packID := GetPackagingID(w, selectedPackName)
+    
 
-        //Получаем ID единицы учета
-        // selectedUnitName := unit_select.Selected
-        // var unitID uint
-        // for _, unit := range units {
-        //     if unit.Name == selectedUnitName {
-        //         unitID = unit.ID
-        //         break
-        //     }
-        // }
+        // Получаем ID единицы учета
+        selectedUnitName := unit_select.Selected
+        unitID := GetUnitID(w, selectedUnitName)
+        
+        log.Println("UNITID IS: ", unitID)
 
 		// Создаем новый товар
-        // newProduct := models.Product{
-        //     Name: name, 
-        //     SubCategoryID: subcategoryID, 
-        //     PackagingID: packID,
-        //     UnitID: unitID,
-        // }
+        newProduct := models.Product{
+            SubCategoryID: subcategoryID, 
+            PackagingID: packID,
+            UnitID: unitID,
+        }
+
+        newProduct.Name = name
 
         // Сохраняем товар в базе данных
-        // _, err := services.CreateProductService(newProduct)
-        // if err != nil {
-        //     log.Panic(err)
-        //     return
-        // }
+        _, err := services.CreateProductService(newProduct)
+        if err != nil {
+            dialog.NewError(err, w).Show()
+            return
+        }
 
-        // Закрываем окно
+        dialogs.SuccessAddDataDialog(w).Show()
 
 
         // Обновляем список товаров в главном окне
         // (здесь нужно реализовать логику обновления списка)
     })
 
-    // Создаем контейнер для полей и кнопки
-     content := container.NewVBox(
-		// widget.NewLabel("Категория:"),
-        container.NewHBox(
-            cat_select,
-            addCategoryBtn,
-        ),
-        container.NewHBox(
-            subcat_select,
-            addSubcatBtn,
+    go HandleUpdateCategoryChannel(updateCategoryChan, w, cat_select)
+    go HandlUpdatePackagingChannel(updatePackagingChan, w, pack_select)
+    go HandlUpdateUnitChannel(updateUnitChan, w, unit_select)
 
-        ),
-    
+    // Создаем контейнер для полей и кнопки
+    content := container.NewVBox(
+        container.NewHBox(cat_select, addCategoryBtn),
+        container.NewHBox(subcat_select, addSubcatBtn),
         nameEntry,
-        // pack_select,
-        // unit_select,
+        container.NewHBox(pack_select, addPackagingBtn),
+        container.NewHBox(unit_select, addUnitBtn),
         saveButton,
     )
 
     // Устанавливаем контент окна
     w.SetContent(content)
 
-    go func() {
-        for range updateCategoryChan {
-            catNames, _ := CreateCategorySelectOptions(w)
-            fyne.Do(func() {cat_select.SetOptions(catNames)})
-           
-        }
-    }()
-
     // Показываем окно
     w.Show()
 }
+
+
+
