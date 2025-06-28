@@ -2,10 +2,12 @@ package catalogs
 
 import (
 	"fyne.io/fyne/v2"
+	"fyne.io/fyne/v2/canvas"
 	"fyne.io/fyne/v2/dialog"
 	"fyne.io/fyne/v2/widget"
 	"github.com/HubPavKul1/vetstore2025/internal/services"
 	"github.com/HubPavKul1/vetstore2025/internal/ui/selects"
+	"github.com/HubPavKul1/vetstore2025/internal/ui/ui_utils"
 )
 
 
@@ -30,6 +32,14 @@ func CreateSubCategorySelect() *widget.Select {
 			Placeholder: "Выберите подкатегорию товара",
 		})
 	return subcat_select
+}
+
+func CreateSubCategorySelectWithError() (*widget.Select, *canvas.Text) {
+	subcat_select := CreateSubCategorySelect()
+	subcat_select_error := ui_utils.EmptyFieldErrorLabel()
+	subcat_select.OnChanged = func(s string) {subcat_select_error.Text = ""}
+	
+	return subcat_select, subcat_select_error
 }
 
 

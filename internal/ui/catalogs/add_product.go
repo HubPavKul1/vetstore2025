@@ -23,16 +23,16 @@ func AddProduct() {
     updatePackagingChan := make(chan struct{})
     updateUnitChan := make(chan struct{})
 
-    pack_select := CreatePackagingSelect(w)
-    unit_select := CreateUnitSelect(w)
-    subcat_select := CreateSubCategorySelect()
+    pack_select, packSelectError := CreatePackagingSelectWithError(w)
+    unit_select, unitSelectError := CreateUnitSelectWithError(w)
+    subcat_select, subcatSelectError := CreateSubCategorySelectWithError()
     cat_select := CreateCategorySelect(w)
     cat_select.OnChanged = func(s string) {
         subcatNames := CreateSubCategorySelectOptions(w, s)
         subcat_select.SetOptions(subcatNames)
     }
 
-    nameEntry := entries.NameEntry("Введите наименование товара")
+    nameEntry, nameEntryError := entries.EntryWithError("Введите наименование товара")
 
     saveButton := ui_utils.CreateSaveBtn()
     backButton := ui_utils.CreateBackBtn(w)
@@ -40,39 +40,71 @@ func AddProduct() {
     // Кнопка для подтверждения
     saveButton.OnTapped = func() {
     	// Получаем введенные данные
-        name := nameEntry.Text
+        valid := true
+
         // Получаем выбранную подкатегорию
         selectedSubCategory := subcat_select.Selected
+        if !ui_utils.IsValidSelect(selectedSubCategory) {
+            valid = false
+            subcatSelectError.Text = ui_utils.EmptyFieldError
+            return
+        }
         log.Println("SElected SubCat: ", selectedSubCategory)
         subcategoryID := GetSubcatID(w, selectedSubCategory)
         log.Println("SubcatID for New Product: ", subcategoryID)
+        
+        // Получаем наименование товара
+        name := nameEntry.Text
+        if !ui_utils.IsNotEmptyField(name) {
+            valid = false
+            nameEntryError.Text = ui_utils.EmptyFieldError
+            return
+        }
 
         // Получаем ID упаковки
         selectedPackName := pack_select.Selected
+        if !ui_utils.IsValidSelect(selectedPackName) {
+            valid = false
+            packSelectError.Text = ui_utils.EmptyFieldError
+            return
+        }
+        // packSelectError.Text = ""
         packID := GetPackagingID(w, selectedPackName)
+        log.Println("UNITID IS: ", packID)
     
         // Получаем ID единицы учета
         selectedUnitName := unit_select.Selected
+        if !ui_utils.IsValidSelect(selectedUnitName) {
+            valid = false
+            unitSelectError.Text = ui_utils.EmptyFieldError
+            return
+        }
+
         unitID := GetUnitID(w, selectedUnitName)
         log.Println("UNITID IS: ", unitID)
 
-		// Создаем новый товар
+        if !valid {
+            log.Println("Форма НеВалидна!!!")
+            return
+        }
+
+        log.Println("ISVALID FORM: ", valid)
+        //     // Создаем новый товар
         newProduct := models.Product{
             SubCategoryID: subcategoryID, 
             PackagingID: packID,
             UnitID: unitID,
         }
-
         newProduct.Name = name
-
         // Сохраняем товар в базе данных
         _, err := services.CreateProductService(newProduct)
-        if err != nil {
-            dialog.NewError(err, w).Show()
-            return
-        }
+            if err != nil {
+                dialog.NewError(err, w).Show()
+                return
+            }
 
         dialogs.SuccessAddDataDialog(w).Show()
+		
     }
 
     // Обновляем селекты после добавления новых данных
@@ -83,10 +115,18 @@ func AddProduct() {
     // Создаем контейнер для полей и кнопки
     content := container.NewVBox(
         container.NewHBox(cat_select, AddCategoryBtn(w, updateCategoryChan)),
-        container.NewHBox(subcat_select, AddSubCategoryBtn(w)),
-        nameEntry,
-        container.NewHBox(pack_select, AddPackagingBtn(w, updatePackagingChan)),
-        container.NewHBox(unit_select, AddUnitBtn(w, updateUnitChan)),
+        container.NewVBox(
+            container.NewHBox(subcat_select, AddSubCategoryBtn(w)),subcatSelectError,
+        ),
+        container.NewVBox(nameEntry, nameEntryError,),
+        container.NewVBox(
+            container.NewHBox(pack_select, AddPackagingBtn(w, updatePackagingChan)),
+            packSelectError,
+        ),
+        container.NewVBox(
+            container.NewHBox(unit_select, AddUnitBtn(w, updateUnitChan)),
+            unitSelectError,
+        ),
         saveButton,
         backButton,
     )

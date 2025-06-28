@@ -2,10 +2,12 @@ package catalogs
 
 import (
 	"fyne.io/fyne/v2"
+	"fyne.io/fyne/v2/canvas"
 	"fyne.io/fyne/v2/dialog"
 	"fyne.io/fyne/v2/widget"
 	"github.com/HubPavKul1/vetstore2025/internal/services"
 	"github.com/HubPavKul1/vetstore2025/internal/ui/selects"
+	"github.com/HubPavKul1/vetstore2025/internal/ui/ui_utils"
 )
 
 
@@ -33,6 +35,13 @@ func CreatePackagingSelect(w fyne.Window) *widget.Select {
             Options: packNames,
         })
 	return pack_select
+}
+
+func CreatePackagingSelectWithError(w fyne.Window) (*widget.Select, *canvas.Text) {
+	pack_select := CreatePackagingSelect(w)
+	pack_select_error := ui_utils.EmptyFieldErrorLabel()
+	pack_select.OnChanged = func(s string) {pack_select_error.Text = ""}
+	return pack_select, pack_select_error
 }
 
 

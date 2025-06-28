@@ -11,6 +11,7 @@ import (
 	"github.com/HubPavKul1/vetstore2025/internal/services"
 	"github.com/HubPavKul1/vetstore2025/internal/ui/dialogs"
 	"github.com/HubPavKul1/vetstore2025/internal/ui/entries"
+	"github.com/HubPavKul1/vetstore2025/internal/ui/ui_utils"
 )
 
 // AddItemDialog создает диалоговое окно для добавления товара
@@ -19,13 +20,24 @@ func AddCategoryDialog(parent fyne.Window, updateChan chan<- struct{}) {
     dialog_win := dialogs.CreateAddDataDialog(parent, "Добавить категорию товара")
 
     // Поле для ввода данных
-    name_entry := entries.NameEntry("Введите наименование категории")
+    name_entry, errorLabel := entries.EntryWithError("Введите наименование категории")
+    category_input := container.NewVBox(name_entry, errorLabel)
 
-    form := widget.NewForm(widget.NewFormItem("", name_entry),)
+    form := widget.NewForm(widget.NewFormItem("", category_input),)
     form.SubmitText = "СОХРАНИТЬ"
     form.OnSubmit = func() {
+        valid := true
         // Получаем введенные данные
         name := name_entry.Text
+        if !ui_utils.IsNotEmptyField(name) {
+            valid = false
+            errorLabel.Text = ui_utils.EmptyFieldError
+            return
+        }
+
+        if !valid {
+            return
+        }
 
         // Создаем новую категорию
         newCategory := models.Category{}
