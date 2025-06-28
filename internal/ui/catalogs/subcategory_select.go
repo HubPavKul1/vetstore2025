@@ -1,14 +1,15 @@
 package catalogs
 
 import (
-
 	"fyne.io/fyne/v2"
 	"fyne.io/fyne/v2/dialog"
+	"fyne.io/fyne/v2/widget"
 	"github.com/HubPavKul1/vetstore2025/internal/services"
+	"github.com/HubPavKul1/vetstore2025/internal/ui/selects"
 )
 
 
-func CreateSubCategorySelectOptions(w fyne.Window, categoryName string) ([]string){
+func CreateSubCategorySelectOptions(w fyne.Window, categoryName string) []string {
 
 	subcategories, err := services.GetSubCategoriesForCategoryService(categoryName)
 	if err != nil {
@@ -21,6 +22,14 @@ func CreateSubCategorySelectOptions(w fyne.Window, categoryName string) ([]strin
 
 	return subcatNames
 
+}
+
+func CreateSubCategorySelect() *widget.Select {
+	subcat_select := selects.CreateSelect(
+		&selects.CreateSelectParams{
+			Placeholder: "Выберите подкатегорию товара",
+		})
+	return subcat_select
 }
 
 

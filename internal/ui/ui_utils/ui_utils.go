@@ -33,6 +33,23 @@ func CreateColoredButton(c color.RGBA, b *widget.Button, btnText *canvas.Text) *
 
 }
 
+func CreateBaseBtn(title string) *widget.Button {
+	btn := widget.NewButton("", func() {})
+	btn.Text = strings.ToUpper(title)
+	return btn
+}
+
+func CreateBackBtn(w fyne.Window) *widget.Button {
+	btn := CreateBaseBtn("Назад")
+	btn.OnTapped = func() {w.Close()}
+	return btn
+}
+
+func CreateSaveBtn() *widget.Button {
+	return CreateBaseBtn("Сохранить")
+}
+
+
 func CreateNewWindow(title string, isMaster bool) fyne.Window{
 	w := app.MyApp.NewWindow(strings.ToUpper(title))
 	w.CenterOnScreen()

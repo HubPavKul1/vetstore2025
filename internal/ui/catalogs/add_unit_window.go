@@ -1,6 +1,8 @@
 package catalogs
 
 import (
+	"strings"
+
 	"fyne.io/fyne/v2"
 	"fyne.io/fyne/v2/container"
 	"fyne.io/fyne/v2/dialog"
@@ -52,4 +54,11 @@ func AddUnitDialog(parent fyne.Window, updateChan chan<- struct{}) {
 
     // Показываем окно
     dialog_win.Show()
+}
+
+
+func AddUnitBtn(parent fyne.Window, updateChan chan<- struct{}) *widget.Button {
+    btn := widget.NewButton("", func() {AddUnitDialog(parent, updateChan)})
+    btn.Text = strings.ToUpper("Добавить единицу учета товара")
+    return btn
 }

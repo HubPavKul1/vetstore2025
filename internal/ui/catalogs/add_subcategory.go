@@ -40,12 +40,6 @@ func AddSubCategoryDialog(parent fyne.Window) {
 
         selectedCategory := categorySelect.Selected
         categoryID := GetCategoryID(parent, selectedCategory)
-        // for _, category := range categories {
-        //     if category.Name == selectedCategory {
-        //         categoryID = category.ID
-        //         break
-        //     }
-        // }
 
         // Создаем новую подкатегорию
         newSubCategory := models.SubCategory{}
@@ -75,4 +69,10 @@ func AddSubCategoryDialog(parent fyne.Window) {
     // Показываем окно
     dialog_win.Show()
     
+}
+
+func AddSubCategoryBtn(parent fyne.Window) *widget.Button {
+      btn := widget.NewButton("", func() {AddSubCategoryDialog(parent)})
+      btn.Text = "ДОБАВИТЬ ПОДКАТЕГОРИЮ ТОВАРА"
+      return btn
 }

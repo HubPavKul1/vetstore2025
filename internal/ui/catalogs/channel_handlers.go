@@ -12,25 +12,30 @@ func HandleUpdateCategoryChannel(
 ) {
     for range updateCategoryChan {
         catNames := CreateCategorySelectOptions(w)
-        fyne.Do(func() { category_select.SetOptions(catNames) })
+        fyne.Do(func() {category_select.SetOptions(catNames) })
     }
 }
 
-func HandlUpdatePackagingChannel(
+func HandleUpdatePackagingChannel(
     updatePackagingChan <-chan struct{}, 
     w fyne.Window, 
     packaging_select *widget.Select,
 ) {
-    packNames := CreatePackagingSelectOptions(w)
-    fyne.Do(func() {packaging_select.SetOptions(packNames)})
+    for range updatePackagingChan {
+        packNames := CreatePackagingSelectOptions(w)
+        fyne.Do(func() {packaging_select.SetOptions(packNames)})
+    }
+    
 }
 
-
-func HandlUpdateUnitChannel(
+func HandleUpdateUnitChannel(
     updateUnitChan <-chan struct{}, 
     w fyne.Window, 
     unit_select *widget.Select,
 ) {
-    unitNames := CreateUnitSelectOptions(w)
-    fyne.Do(func() {unit_select.SetOptions(unitNames)})
+    for range updateUnitChan {
+        unitNames := CreateUnitSelectOptions(w)
+        fyne.Do(func() {unit_select.SetOptions(unitNames)})
+    }
+    
 }

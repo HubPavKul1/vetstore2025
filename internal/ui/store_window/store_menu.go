@@ -22,7 +22,7 @@ func CreateStoreMenu(window fyne.Window) *fyne.Container{
 
 	reportsBtn := widget.NewButton("ОТЧЕТЫ", func() {})
 
-	backBtn := widget.NewButton("НАЗАД", func() {window.Close()})
+	backBtn := ui_utils.CreateBackBtn(window)
 
 
 	btns := []*widget.Button{

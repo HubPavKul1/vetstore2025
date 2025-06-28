@@ -1,6 +1,8 @@
 package catalogs
 
 import (
+	"strings"
+
 	"fyne.io/fyne/v2"
 	"fyne.io/fyne/v2/container"
 	"fyne.io/fyne/v2/dialog"
@@ -11,26 +13,26 @@ import (
 	"github.com/HubPavKul1/vetstore2025/internal/ui/entries"
 )
 
-// AddItemDialog создает диалоговое окно для добавления товара
-func AddCategoryDialog(parent fyne.Window, updateChan chan<- struct{}) {
+// AddItemDialog создает диалоговое окно для добавления упаковки
+func AddPackagingDialog(parent fyne.Window, updateChan chan<- struct{}) {
     // Создаем новое окно
-    dialog_win := dialogs.CreateAddDataDialog(parent, "Добавить категорию товара")
+    dialog_win := dialogs.CreateAddDataDialog(parent, "Добавить упаковку товара")
 
     // Поле для ввода данных
-    name_entry := entries.NameEntry("Введите наименование категории")
+    name_entry := entries.NameEntry("Введите наименование упаковки")
 
-    form := widget.NewForm(widget.NewFormItem("", name_entry),)
+    form := widget.NewForm(widget.NewFormItem("", name_entry))
     form.SubmitText = "СОХРАНИТЬ"
     form.OnSubmit = func() {
         // Получаем введенные данные
         name := name_entry.Text
 
-        // Создаем новую категорию
-        newCategory := models.Category{}
-        newCategory.Name = name
+        // Создаем новую упаковку
+        newPackaging := models.Packaging{}
+        newPackaging.Name = name
 
-        // Сохраняем товар в базе данных
-        _, err := services.CreateCategoryService(newCategory)
+        // Сохраняем упаковку в базе данных
+        _, err := services.CreatePackagingService(newPackaging)
         if err != nil {
             dialog.NewError(err, parent).Show()
             return
@@ -52,4 +54,10 @@ func AddCategoryDialog(parent fyne.Window, updateChan chan<- struct{}) {
 
     // Показываем окно
     dialog_win.Show()
+}
+
+func AddPackagingBtn(parent fyne.Window, updateChan chan<- struct{}) *widget.Button {
+    btn := widget.NewButton("", func() {AddPackagingDialog(parent, updateChan)})
+    btn.Text = strings.ToUpper("Добавить упаковку товара")
+    return btn
 }

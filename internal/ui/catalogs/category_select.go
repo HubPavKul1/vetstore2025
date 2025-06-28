@@ -3,11 +3,13 @@ package catalogs
 import (
 	"fyne.io/fyne/v2"
 	"fyne.io/fyne/v2/dialog"
+	"fyne.io/fyne/v2/widget"
 	"github.com/HubPavKul1/vetstore2025/internal/services"
+	"github.com/HubPavKul1/vetstore2025/internal/ui/selects"
 )
 
 
-func CreateCategorySelectOptions(w fyne.Window) ([]string ){
+func CreateCategorySelectOptions(w fyne.Window) []string {
 	categories, err := services.GetCategoriesService()
 	if err != nil {
 		dialog.NewError(err, w).Show()
@@ -21,6 +23,14 @@ func CreateCategorySelectOptions(w fyne.Window) ([]string ){
 	return catNames
 }
 
+func CreateCategorySelect(w fyne.Window) *widget.Select {
+	catOptions := CreateCategorySelectOptions(w)
+	catSelect := selects.CreateSelect(&selects.CreateSelectParams{
+		Placeholder: "Выберите категорию товара",
+		Options: catOptions,
+	})
+	return catSelect
+}
 
 func GetCategoryID(w fyne.Window, catName string) uint {
 	catID, err := services.GetCategoryIDBYNameService(catName)

@@ -1,6 +1,8 @@
 package catalogs
 
 import (
+	"strings"
+
 	"fyne.io/fyne/v2"
 	"fyne.io/fyne/v2/container"
 	"fyne.io/fyne/v2/dialog"
@@ -11,13 +13,13 @@ import (
 	"github.com/HubPavKul1/vetstore2025/internal/ui/entries"
 )
 
-// AddItemDialog создает диалоговое окно для добавления упаковки
-func AddPackagingDialog(parent fyne.Window, updateChan chan<- struct{}) {
+// AddItemDialog создает диалоговое окно для добавления товара
+func AddCategoryDialog(parent fyne.Window, updateChan chan<- struct{}) {
     // Создаем новое окно
-    dialog_win := dialogs.CreateAddDataDialog(parent, "Добавить упаковку товара")
+    dialog_win := dialogs.CreateAddDataDialog(parent, "Добавить категорию товара")
 
     // Поле для ввода данных
-    name_entry := entries.NameEntry("Введите наименование упаковки")
+    name_entry := entries.NameEntry("Введите наименование категории")
 
     form := widget.NewForm(widget.NewFormItem("", name_entry),)
     form.SubmitText = "СОХРАНИТЬ"
@@ -25,12 +27,12 @@ func AddPackagingDialog(parent fyne.Window, updateChan chan<- struct{}) {
         // Получаем введенные данные
         name := name_entry.Text
 
-        // Создаем новую упаковку
-        newPackaging := models.Packaging{}
-        newPackaging.Name = name
+        // Создаем новую категорию
+        newCategory := models.Category{}
+        newCategory.Name = name
 
-        // Сохраняем упаковку в базе данных
-        _, err := services.CreatePackagingService(newPackaging)
+        // Сохраняем товар в базе данных
+        _, err := services.CreateCategoryService(newCategory)
         if err != nil {
             dialog.NewError(err, parent).Show()
             return
@@ -52,4 +54,11 @@ func AddPackagingDialog(parent fyne.Window, updateChan chan<- struct{}) {
 
     // Показываем окно
     dialog_win.Show()
+}
+
+
+func AddCategoryBtn(parent fyne.Window, updateChan chan<- struct{}) *widget.Button {
+    btn := widget.NewButton("", func() {AddCategoryDialog(parent, updateChan)})
+    btn.Text = strings.ToUpper("Добавить категорию товара")
+    return btn
 }

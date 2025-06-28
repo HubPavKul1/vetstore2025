@@ -15,8 +15,7 @@ func CreateVetsMenu(window fyne.Window) *fyne.Container{
 
 	storeBtn := widget.NewButton("ВЫПИСАТЬ ТОВАР НА ПРИЕМ", func() {})
 
-	backBtn := widget.NewButton("НАЗАД", func() {window.Close()})
-
+	backBtn := ui_utils.CreateBackBtn(window)
 
 	btns := []*widget.Button{saleBtn, storeBtn, backBtn, }
 
