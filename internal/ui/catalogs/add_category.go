@@ -1,7 +1,6 @@
 package catalogs
 
 import (
-	"strings"
 
 	"fyne.io/fyne/v2"
 	"fyne.io/fyne/v2/container"
@@ -14,8 +13,15 @@ import (
 	"github.com/HubPavKul1/vetstore2025/internal/ui/ui_utils"
 )
 
-// AddItemDialog создает диалоговое окно для добавления товара
-func AddCategoryDialog(parent fyne.Window, updateChan chan<- struct{}) {
+
+func AddCategoryBtn(parent fyne.Window, updateChan chan<- struct{}) *widget.Button {
+    btn := ui_utils.CreateBaseBtn("Добавить категорию товара")
+    btn.OnTapped = func() {addCategoryDialog(parent, updateChan)}
+    return btn
+}
+
+
+func addCategoryDialog(parent fyne.Window, updateChan chan<- struct{}) {
     // Создаем новое окно
     dialog_win := dialogs.CreateAddDataDialog(parent, "Добавить категорию товара")
 
@@ -23,34 +29,19 @@ func AddCategoryDialog(parent fyne.Window, updateChan chan<- struct{}) {
     name_entry, errorLabel := entries.EntryWithError("Введите наименование категории")
     category_input := container.NewVBox(name_entry, errorLabel)
 
-    form := widget.NewForm(widget.NewFormItem("", category_input),)
+    form := widget.NewForm(widget.NewFormItem("", category_input))
     form.SubmitText = "СОХРАНИТЬ"
     form.OnSubmit = func() {
-        valid := true
         // Получаем введенные данные
         name := name_entry.Text
         if !ui_utils.IsNotEmptyField(name) {
-            valid = false
             errorLabel.Text = ui_utils.EmptyFieldError
             return
         }
 
-        if !valid {
-            return
-        }
-
         // Создаем новую категорию
-        newCategory := models.Category{}
-        newCategory.Name = name
-
-        // Сохраняем товар в базе данных
-        _, err := services.CreateCategoryService(newCategory)
-        if err != nil {
-            dialog.NewError(err, parent).Show()
-            return
-        } 
-        dialogs.SuccessAddDataDialog(parent).Show() 
-        updateChan <- struct{}{}
+        saveNewCategory(parent, updateChan, name)
+        name_entry.SetText("")
             
         // Закрываем окно
         dialog_win.Close()
@@ -69,8 +60,18 @@ func AddCategoryDialog(parent fyne.Window, updateChan chan<- struct{}) {
 }
 
 
-func AddCategoryBtn(parent fyne.Window, updateChan chan<- struct{}) *widget.Button {
-    btn := widget.NewButton("", func() {AddCategoryDialog(parent, updateChan)})
-    btn.Text = strings.ToUpper("Добавить категорию товара")
-    return btn
+func saveNewCategory(parent fyne.Window, updateChan chan<- struct{}, catName string) {
+    // Создаем новую категорию
+    newCategory := models.Category{}
+    newCategory.Name = catName
+
+    // Сохраняем товар в базе данных
+    _, err := services.CreateCategoryService(newCategory)
+    if err != nil {
+        dialog.NewError(err, parent).Show()
+        return
+    } 
+    dialogs.SuccessAddDataDialog(parent).Show() 
+    updateChan <- struct{}{}             
+
 }

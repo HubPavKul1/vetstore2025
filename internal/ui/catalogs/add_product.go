@@ -1,8 +1,8 @@
 package catalogs
 
 import (
-	"log"
 
+	"fyne.io/fyne/v2"
 	"fyne.io/fyne/v2/container"
 	"fyne.io/fyne/v2/dialog"
 
@@ -26,8 +26,12 @@ func AddProduct() {
     pack_select, packSelectError := CreatePackagingSelectWithError(w)
     unit_select, unitSelectError := CreateUnitSelectWithError(w)
     subcat_select, subcatSelectError := CreateSubCategorySelectWithError()
-    cat_select := CreateCategorySelect(w)
+    cat_select, catSelectError := CreateCategorySelectWithError(w)
     cat_select.OnChanged = func(s string) {
+        catSelectError.Text = ""
+        if !ui_utils.IsNotEmptyField(s) {
+            return
+        }
         subcatNames := CreateSubCategorySelectOptions(w, s)
         subcat_select.SetOptions(subcatNames)
     }
@@ -37,21 +41,27 @@ func AddProduct() {
     saveButton := ui_utils.CreateSaveBtn()
     backButton := ui_utils.CreateBackBtn(w)
 
-    // Кнопка для подтверждения
     saveButton.OnTapped = func() {
-    	// Получаем введенные данные
+
+    	// Получаем введенные данные и валидируем их
         valid := true
 
+        selectedCategory := cat_select.Selected
+        if !ui_utils.IsValidSelect(selectedCategory) {
+            valid = false
+            catSelectError.Text = ui_utils.EmptyFieldError
+            return
+        }
+        
         // Получаем выбранную подкатегорию
         selectedSubCategory := subcat_select.Selected
         if !ui_utils.IsValidSelect(selectedSubCategory) {
             valid = false
             subcatSelectError.Text = ui_utils.EmptyFieldError
+            cat_select.ClearSelected()
             return
         }
-        log.Println("SElected SubCat: ", selectedSubCategory)
         subcategoryID := GetSubcatID(w, selectedSubCategory)
-        log.Println("SubcatID for New Product: ", subcategoryID)
         
         // Получаем наименование товара
         name := nameEntry.Text
@@ -70,7 +80,6 @@ func AddProduct() {
         }
         // packSelectError.Text = ""
         packID := GetPackagingID(w, selectedPackName)
-        log.Println("UNITID IS: ", packID)
     
         // Получаем ID единицы учета
         selectedUnitName := unit_select.Selected
@@ -81,30 +90,24 @@ func AddProduct() {
         }
 
         unitID := GetUnitID(w, selectedUnitName)
-        log.Println("UNITID IS: ", unitID)
 
         if !valid {
-            log.Println("Форма НеВалидна!!!")
             return
         }
 
-        log.Println("ISVALID FORM: ", valid)
-        //     // Создаем новый товар
-        newProduct := models.Product{
-            SubCategoryID: subcategoryID, 
-            PackagingID: packID,
+        // Создаем новый товар
+        saveNewProduct(w, &addProductForm{
+            SubcategoryID: subcategoryID,
+            PackID: packID,
             UnitID: unitID,
-        }
-        newProduct.Name = name
-        // Сохраняем товар в базе данных
-        _, err := services.CreateProductService(newProduct)
-            if err != nil {
-                dialog.NewError(err, w).Show()
-                return
-            }
+            Name: name,
+        })
 
-        dialogs.SuccessAddDataDialog(w).Show()
-		
+        cat_select.ClearSelected()
+        subcat_select.ClearSelected()
+        nameEntry.SetText("")
+        pack_select.ClearSelected()
+        unit_select.ClearSelected()
     }
 
     // Обновляем селекты после добавления новых данных
@@ -114,18 +117,26 @@ func AddProduct() {
 
     // Создаем контейнер для полей и кнопки
     content := container.NewVBox(
-        container.NewHBox(cat_select, AddCategoryBtn(w, updateCategoryChan)),
-        container.NewVBox(
-            container.NewHBox(subcat_select, AddSubCategoryBtn(w)),subcatSelectError,
+        container.NewHBox(
+            container.NewVBox(
+                container.NewHBox(cat_select, AddCategoryBtn(w, updateCategoryChan)),
+                catSelectError, 
+            ),
+            container.NewVBox(
+                container.NewHBox(subcat_select, AddSubCategoryBtn(w)),
+                subcatSelectError,
+            ),   
         ),
         container.NewVBox(nameEntry, nameEntryError,),
-        container.NewVBox(
-            container.NewHBox(pack_select, AddPackagingBtn(w, updatePackagingChan)),
-            packSelectError,
-        ),
-        container.NewVBox(
-            container.NewHBox(unit_select, AddUnitBtn(w, updateUnitChan)),
-            unitSelectError,
+        container.NewHBox(
+            container.NewVBox(
+                container.NewHBox(pack_select, AddPackagingBtn(w, updatePackagingChan)),
+                packSelectError,
+            ),
+            container.NewVBox(
+                container.NewHBox(unit_select, AddUnitBtn(w, updateUnitChan)),
+                unitSelectError,
+            ),    
         ),
         saveButton,
         backButton,
@@ -137,3 +148,46 @@ func AddProduct() {
     // Показываем окно
     w.Show()
 }
+
+
+type addProductForm struct {
+    SubcategoryID uint
+    Name string
+    PackID uint
+    UnitID uint
+}
+
+func saveNewProduct( w fyne.Window, f *addProductForm) {
+    newProduct := models.Product{
+        SubCategoryID: f.SubcategoryID, 
+        PackagingID: f.PackID,
+        UnitID: f.UnitID,
+    }
+    newProduct.Name =f.Name
+    // Сохраняем товар в базе данных
+    _, err := services.CreateProductService(newProduct)
+        if err != nil {
+            dialog.NewError(err, w).Show()
+            return
+        }
+    dialogs.SuccessAddDataDialog(w).Show()
+}
+
+
+// type formField struct {
+//     fieldValue string
+//     errorLabel *canvas.Text
+// }
+
+// func validator(formFields []*formField) bool {
+//     valid := true
+//     for _, elem := range formFields {
+//         if !ui_utils.IsNotEmptyField(elem.fieldValue) {
+//             valid = false
+//             elem.errorLabel.Text = ui_utils.EmptyFieldError
+//             break
+//         }
+//         return valid
+//     }
+//     return valid     
+// }

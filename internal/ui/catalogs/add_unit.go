@@ -14,22 +14,22 @@ import (
 	"github.com/HubPavKul1/vetstore2025/internal/ui/ui_utils"
 )
 
-// AddItemDialog вызывает диалоговое окно для добавления упаковки
-func AddPackagingBtn(parent fyne.Window, updateChan chan<- struct{}) *widget.Button {
-    btn := widget.NewButton("", func() {addPackagingDialog(parent, updateChan)})
-    btn.Text = strings.ToUpper("Добавить упаковку товара")
+// Вызывает диалоговое окно для добавления единицы учета
+func AddUnitBtn(parent fyne.Window, updateChan chan<- struct{}) *widget.Button {
+    btn := widget.NewButton("", func() {addUnitDialog(parent, updateChan)})
+    btn.Text = strings.ToUpper("Добавить единицу учета товара")
     return btn
 }
 
-func addPackagingDialog(parent fyne.Window, updateChan chan<- struct{}) {
+func addUnitDialog(parent fyne.Window, updateChan chan<- struct{}) {
     // Создаем новое окно
-    dialog_win := dialogs.CreateAddDataDialog(parent, "Добавить упаковку товара")
+    dialog_win := dialogs.CreateAddDataDialog(parent, "Добавить единицу учета товара")
 
     // Поле для ввода данных
-    name_entry, errorLabel := entries.EntryWithError("Введите наименование упаковки")
-    pack_input := container.NewVBox(name_entry, errorLabel)
+    name_entry, errorLabel := entries.EntryWithError("Введите наименование единицы учета")
+    unit_input := container.NewVBox(name_entry, errorLabel)
 
-    form := widget.NewForm(widget.NewFormItem("", pack_input))
+    form := widget.NewForm(widget.NewFormItem("", unit_input))
     form.SubmitText = "СОХРАНИТЬ"
     form.OnSubmit = func() {
         // Получаем введенные данные
@@ -39,10 +39,10 @@ func addPackagingDialog(parent fyne.Window, updateChan chan<- struct{}) {
             return
         }
 
-        // Сохраняем в базу данных
-        saveNewPackaging(parent, updateChan, name)
+        // Создаем новую единицу учета
+        saveNewUnit(parent, updateChan, name)
         name_entry.SetText("")
-            
+       
         // Закрываем окно
         dialog_win.Close()
     }
@@ -59,17 +59,16 @@ func addPackagingDialog(parent fyne.Window, updateChan chan<- struct{}) {
     dialog_win.Show()
 }
 
-func saveNewPackaging(parent fyne.Window, updateChan chan<- struct{}, packName string) {
-     // Создаем новую упаковку
-    newPackaging := models.Packaging{}
-    newPackaging.Name = packName
+func saveNewUnit(parent fyne.Window, updateChan chan<- struct{}, unitName string) {
+    newUnit := models.Unit{}
+    newUnit.Name = unitName
 
-    // Сохраняем упаковку в базе данных
-    _, err := services.CreatePackagingService(newPackaging)
+    // Сохраняем единицу учета в базе данных
+     _, err := services.CreateUnitService(newUnit)
     if err != nil {
         dialog.NewError(err, parent).Show()
         return
     } 
     dialogs.SuccessAddDataDialog(parent).Show() 
-    updateChan <- struct{}{}
+    updateChan <- struct{}{}         
 }

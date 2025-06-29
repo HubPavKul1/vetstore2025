@@ -2,10 +2,12 @@ package catalogs
 
 import (
 	"fyne.io/fyne/v2"
+	"fyne.io/fyne/v2/canvas"
 	"fyne.io/fyne/v2/dialog"
 	"fyne.io/fyne/v2/widget"
 	"github.com/HubPavKul1/vetstore2025/internal/services"
 	"github.com/HubPavKul1/vetstore2025/internal/ui/selects"
+	"github.com/HubPavKul1/vetstore2025/internal/ui/ui_utils"
 )
 
 
@@ -32,12 +34,18 @@ func CreateCategorySelect(w fyne.Window) *widget.Select {
 	return catSelect
 }
 
+func CreateCategorySelectWithError(w fyne.Window) (*widget.Select, *canvas.Text) {
+	cat_select := CreateCategorySelect(w)
+	cat_select_error := ui_utils.EmptyFieldErrorLabel()
+	cat_select.OnChanged = func(s string) {cat_select_error.Text = ""}
+	return cat_select, cat_select_error
+}
+
 func GetCategoryID(w fyne.Window, catName string) uint {
 	catID, err := services.GetCategoryIDBYNameService(catName)
 	if err != nil {
 		dialog.NewError(err, w).Show()
 	}
-
 
 	return catID
 
