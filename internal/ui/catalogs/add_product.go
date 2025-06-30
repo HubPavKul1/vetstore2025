@@ -26,9 +26,9 @@ func AddProduct() {
     pack_select, packSelectError := CreatePackagingSelectWithError(w)
     unit_select, unitSelectError := CreateUnitSelectWithError(w)
     subcat_select, subcatSelectError := CreateSubCategorySelectWithError()
-    cat_select, catSelectError := CreateCategorySelectWithError(w)
-    cat_select.OnChanged = func(s string) {
-        catSelectError.Text = ""
+    cat_select := CreateCategorySelectWithError(w)
+    cat_select.Select.OnChanged = func(s string) {
+        cat_select.ErrorLabel.Text = ""
         if !ui_utils.IsNotEmptyField(s) {
             return
         }
@@ -46,10 +46,10 @@ func AddProduct() {
     	// Получаем введенные данные и валидируем их
         valid := true
 
-        selectedCategory := cat_select.Selected
+        selectedCategory := cat_select.Select.Selected
         if !ui_utils.IsValidSelect(selectedCategory) {
             valid = false
-            catSelectError.Text = ui_utils.EmptyFieldError
+            cat_select.ErrorLabel.Text = ui_utils.EmptyFieldError
             return
         }
         
@@ -58,7 +58,7 @@ func AddProduct() {
         if !ui_utils.IsValidSelect(selectedSubCategory) {
             valid = false
             subcatSelectError.Text = ui_utils.EmptyFieldError
-            cat_select.ClearSelected()
+            cat_select.Select.ClearSelected()
             return
         }
         subcategoryID := GetSubcatID(w, selectedSubCategory)
@@ -103,7 +103,7 @@ func AddProduct() {
             Name: name,
         })
 
-        cat_select.ClearSelected()
+        cat_select.Select.ClearSelected()
         subcat_select.ClearSelected()
         nameEntry.SetText("")
         pack_select.ClearSelected()
@@ -111,7 +111,7 @@ func AddProduct() {
     }
 
     // Обновляем селекты после добавления новых данных
-    go HandleUpdateCategoryChannel(updateCategoryChan, w, cat_select)
+    go HandleUpdateCategoryChannel(updateCategoryChan, w, cat_select.Select)
     go HandleUpdatePackagingChannel(updatePackagingChan, w, pack_select)
     go HandleUpdateUnitChannel(updateUnitChan, w, unit_select)
 
@@ -119,8 +119,8 @@ func AddProduct() {
     content := container.NewVBox(
         container.NewHBox(
             container.NewVBox(
-                container.NewHBox(cat_select, AddCategoryBtn(w, updateCategoryChan)),
-                catSelectError, 
+                container.NewHBox(cat_select.Select, AddCategoryBtn(w, updateCategoryChan)),
+                cat_select.ErrorLabel, 
             ),
             container.NewVBox(
                 container.NewHBox(subcat_select, AddSubCategoryBtn(w)),
@@ -141,6 +141,7 @@ func AddProduct() {
         saveButton,
         backButton,
     )
+
 
     // Устанавливаем контент окна
     w.SetContent(content)

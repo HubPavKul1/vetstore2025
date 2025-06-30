@@ -23,8 +23,8 @@ func addSubCategoryDialog(parent fyne.Window) {
     dialog_win := dialogs.CreateAddDataDialog(parent, "Добавить подкатегорию")
 
     // Поле для ввода данных
-    categorySelect, categoryErrorLabel := CreateCategorySelectWithError(parent)
-    categorySelectError := container.NewVBox(categorySelect, categoryErrorLabel)
+    categorySelect := CreateCategorySelectWithError(parent)
+    categorySelectError := container.NewVBox(categorySelect.Select, categorySelect.ErrorLabel)
     
     name_entry, errorLabel := entries.EntryWithError("Введите наименование подкатегории товара")
     subcategory_input := container.NewVBox(name_entry, errorLabel)
@@ -37,10 +37,10 @@ func addSubCategoryDialog(parent fyne.Window) {
     form.OnSubmit = func() {
         valid := true
         // Получаем введенные данные
-        selectedCategory := categorySelect.Selected
+        selectedCategory := categorySelect.Select.Selected
         if !ui_utils.IsValidSelect(selectedCategory) {
             valid = false
-            categoryErrorLabel.Text = ui_utils.EmptyFieldError
+            categorySelect.ErrorLabel.Text = ui_utils.EmptyFieldError
             return
         }
         categoryID := GetCategoryID(parent, selectedCategory)
@@ -58,7 +58,7 @@ func addSubCategoryDialog(parent fyne.Window) {
 
         // Создаем новую подкатегорию
         saveNewSubcategory(parent, &subcategoryForm{CategoryID: categoryID, Name: name})
-        categorySelect.ClearSelected()
+        categorySelect.Select.ClearSelected()
         name_entry.SetText("")
         
         dialog_win.Close()

@@ -11,43 +11,43 @@ func SubmitFormHandler(w fyne.Window, form *fyne.Container, formFields []*string
     saveButton.OnTapped = func() {
         // Сбор данных из формы
 
-        name := nameEntry.Text
-        category := cat_select.Selected
-        subcategory := subcat_select.Selected
-        packaging := pack_select.Selected
-        unit := unit_select.Selected
+        // name := nameEntry.Text
+        // category := cat_select.Selected
+        // subcategory := subcat_select.Selected
+        // packaging := pack_select.Selected
+        // unit := unit_select.Selected
 
         // Производим валидацию данных
-        if !ValidateForm(name, category, subcategory, packaging, unit) {
-            return
-        }
+        // if !ValidateForm(name, category, subcategory, packaging, unit) {
+        //     return
+        // }
 
         // Получаем IDs из баз данных
-        subcategoryID := GetSubcatID(w, subcategory)
-        packID := GetPackagingID(w, packaging)
-        unitID := GetUnitID(w, unit)
+        // subcategoryID := GetSubcatID(w, subcategory)
+        // packID := GetPackagingID(w, packaging)
+        // unitID := GetUnitID(w, unit)
 
         // Готовим объект продукта
-        product := &addProductForm{
-            SubcategoryID: subcategoryID,
-            Name:          name,
-            PackID:        packID,
-            UnitID:        unitID,
-        }
+        // product := &addProductForm{
+        //     SubcategoryID: subcategoryID,
+        //     Name:          name,
+        //     PackID:        packID,
+        //     UnitID:        unitID,
+        // }
 
         // Сохраняем продукт
-        saveNewProduct(w, product)
+        // saveNewProduct(w, product)
 
         // Очищаем форму
-        clearFormFields()
+        // clearFormFields()
     }
 }
 
 // clearFormFields сбрасывает состояние полей формы
-func clearFormFields() {
-    cat_select.ClearSelected()
-    subcat_select.ClearSelected()
-    nameEntry.SetText("")
-    pack_select.ClearSelected()
-    unit_select.ClearSelected()
-}
+// func clearFormFields() {
+//     cat_select.ClearSelected()
+//     subcat_select.ClearSelected()
+//     nameEntry.SetText("")
+//     pack_select.ClearSelected()
+//     unit_select.ClearSelected()
+// }

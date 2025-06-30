@@ -20,14 +20,14 @@ func CreateAddProductForm(
     pack_select, packSelectError := catalogs.CreatePackagingSelectWithError(w)
     unit_select, unitSelectError := catalogs.CreateUnitSelectWithError(w)
     subcat_select, subcatSelectError := catalogs.CreateSubCategorySelectWithError()
-    cat_select, catSelectError := catalogs.CreateCategorySelectWithError(w)
+    cat_select := catalogs.CreateCategorySelectWithError(w)
     nameEntry, nameEntryError := entries.EntryWithError("Введите наименование товара")
     saveButton := ui_utils.CreateSaveBtn()
     backButton := ui_utils.CreateBackBtn(w)
 
     content := container.NewVBox(
         container.NewHBox(container.NewVBox(
-            container.NewHBox(cat_select, catalogs.AddCategoryBtn(w, updateCategoryChan)), catSelectError,
+            container.NewHBox(cat_select.Select, catalogs.AddCategoryBtn(w, updateCategoryChan)), cat_select.ErrorLabel,
         )),
         container.NewHBox(container.NewVBox(
             container.NewHBox(subcat_select, catalogs.AddSubCategoryBtn(w)), subcatSelectError,

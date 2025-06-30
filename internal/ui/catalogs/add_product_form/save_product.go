@@ -8,20 +8,14 @@ import (
 	"github.com/HubPavKul1/vetstore2025/internal/ui/dialogs"
 )
 
-type AddProductForm struct {
-    SubcategoryID uint
-    Name string
-    PackID uint
-    UnitID uint
-}
 
-func SaveNewProduct( w fyne.Window, f *AddProductForm) {
+func SaveNewProduct( w fyne.Window, f *AddProductFormData) {
     newProduct := models.Product{
         SubCategoryID: f.SubcategoryID, 
-        PackagingID: f.PackID,
+        PackagingID: f.PackagingID,
         UnitID: f.UnitID,
     }
-    newProduct.Name =f.Name
+    newProduct.Name =f.ProductName
     // Сохраняем товар в базе данных
     _, err := services.CreateProductService(newProduct)
         if err != nil {
