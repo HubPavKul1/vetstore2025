@@ -18,8 +18,8 @@ func CreateAddProductForm(
 	) *fyne.Container {
 
     pack_select, packSelectError := catalogs.CreatePackagingSelectWithError(w)
-    unit_select, unitSelectError := catalogs.CreateUnitSelectWithError(w)
-    subcat_select, subcatSelectError := catalogs.CreateSubCategorySelectWithError()
+    unitSelect := catalogs.CreateUnitSelectWithError(w)
+    subcatSelect := catalogs.CreateSubCategorySelectWithError()
     cat_select := catalogs.CreateCategorySelectWithError(w)
     nameEntry := entries.EntryWithError("Введите наименование товара")
     saveButton := uiUtils.CreateSaveBtn()
@@ -30,14 +30,14 @@ func CreateAddProductForm(
             container.NewHBox(cat_select.Select, catalogs.AddCategoryBtn(w, updateCategoryChan)), cat_select.ErrorLabel,
         )),
         container.NewHBox(container.NewVBox(
-            container.NewHBox(subcat_select, catalogs.AddSubCategoryBtn(w)), subcatSelectError,
+            container.NewHBox(subcatSelect.Select, catalogs.AddSubCategoryBtn(w)), subcatSelect.ErrorLabel,
         )),
         container.NewVBox(nameEntry.Input, nameEntry.ErrorLabel),
         container.NewHBox(container.NewVBox(
             container.NewHBox(pack_select, catalogs.AddPackagingBtn(w, updatePackagingChan)), packSelectError,
         )),
         container.NewHBox(container.NewVBox(
-            container.NewHBox(unit_select, catalogs.AddUnitBtn(w, updateUnitChan)), unitSelectError,
+            container.NewHBox(unitSelect.Select, catalogs.AddUnitBtn(w, updateUnitChan)), unitSelect.ErrorLabel,
         )),
         saveButton,
         backButton,

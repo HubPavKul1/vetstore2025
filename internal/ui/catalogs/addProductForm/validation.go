@@ -6,12 +6,6 @@ import (
 	"github.com/HubPavKul1/vetstore2025/internal/ui/uiUtils"
 )
 
-// type AddProductFormField struct {
-// 	FieldValue string
-// 	FieldError *canvas.Text
-// }
-
-
 
 func IsAddProductFormValid(form *AddProductForm) bool {
 	valid := true

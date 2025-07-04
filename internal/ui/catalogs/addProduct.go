@@ -24,8 +24,8 @@ func AddProduct() {
     updateUnitChan := make(chan struct{})
 
     pack_select, packSelectError := CreatePackagingSelectWithError(w)
-    unit_select, unitSelectError := CreateUnitSelectWithError(w)
-    subcat_select, subcatSelectError := CreateSubCategorySelectWithError()
+    unitSelect := CreateUnitSelectWithError(w)
+    subcatSelect := CreateSubCategorySelectWithError()
     cat_select := CreateCategorySelectWithError(w)
     cat_select.Select.OnChanged = func(s string) {
         cat_select.ErrorLabel.Text = ""
@@ -33,7 +33,7 @@ func AddProduct() {
             return
         }
         subcatNames := CreateSubCategorySelectOptions(w, s)
-        subcat_select.SetOptions(subcatNames)
+        subcatSelect.Select.SetOptions(subcatNames)
     }
 
     nameEntry := entries.EntryWithError("Введите наименование товара")
@@ -54,10 +54,10 @@ func AddProduct() {
         }
         
         // Получаем выбранную подкатегорию
-        selectedSubCategory := subcat_select.Selected
+        selectedSubCategory := subcatSelect.Select.Selected
         if !uiUtils.IsValidSelect(selectedSubCategory) {
             valid = false
-            subcatSelectError.Text = uiUtils.EmptyFieldError
+            subcatSelect.ErrorLabel.Text = uiUtils.EmptyFieldError
             cat_select.Select.ClearSelected()
             return
         }
@@ -82,10 +82,10 @@ func AddProduct() {
         packID := GetPackagingID(w, selectedPackName)
     
         // Получаем ID единицы учета
-        selectedUnitName := unit_select.Selected
+        selectedUnitName := unitSelect.Select.Selected
         if !uiUtils.IsValidSelect(selectedUnitName) {
             valid = false
-            unitSelectError.Text = uiUtils.EmptyFieldError
+            unitSelect.ErrorLabel.Text = uiUtils.EmptyFieldError
             return
         }
 
@@ -104,16 +104,16 @@ func AddProduct() {
         })
 
         cat_select.Select.ClearSelected()
-        subcat_select.ClearSelected()
+        subcatSelect.Select.ClearSelected()
         nameEntry.Input.SetText("")
         pack_select.ClearSelected()
-        unit_select.ClearSelected()
+        unitSelect.Select.ClearSelected()
     }
 
     // Обновляем селекты после добавления новых данных
     go HandleUpdateCategoryChannel(updateCategoryChan, w, cat_select.Select)
     go HandleUpdatePackagingChannel(updatePackagingChan, w, pack_select)
-    go HandleUpdateUnitChannel(updateUnitChan, w, unit_select)
+    go HandleUpdateUnitChannel(updateUnitChan, w, unitSelect.Select)
 
     // Создаем контейнер для полей и кнопки
     content := container.NewVBox(
@@ -123,8 +123,8 @@ func AddProduct() {
                 cat_select.ErrorLabel, 
             ),
             container.NewVBox(
-                container.NewHBox(subcat_select, AddSubCategoryBtn(w)),
-                subcatSelectError,
+                container.NewHBox(subcatSelect.Select, AddSubCategoryBtn(w)),
+                subcatSelect.ErrorLabel,
             ),   
         ),
         container.NewVBox(nameEntry.Input, nameEntry.ErrorLabel,),
@@ -134,8 +134,8 @@ func AddProduct() {
                 packSelectError,
             ),
             container.NewVBox(
-                container.NewHBox(unit_select, AddUnitBtn(w, updateUnitChan)),
-                unitSelectError,
+                container.NewHBox(unitSelect.Select, AddUnitBtn(w, updateUnitChan)),
+                unitSelect.ErrorLabel,
             ),    
         ),
         saveButton,

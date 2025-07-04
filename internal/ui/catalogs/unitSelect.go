@@ -2,12 +2,10 @@ package catalogs
 
 import (
 	"fyne.io/fyne/v2"
-	"fyne.io/fyne/v2/canvas"
 	"fyne.io/fyne/v2/dialog"
-	"fyne.io/fyne/v2/widget"
 	"github.com/HubPavKul1/vetstore2025/internal/services"
 	"github.com/HubPavKul1/vetstore2025/internal/ui/selects"
-	"github.com/HubPavKul1/vetstore2025/internal/ui/uiUtils"
+	"github.com/HubPavKul1/vetstore2025/internal/ui/uiTypes"
 )
 
 
@@ -27,9 +25,9 @@ func CreateUnitSelectOptions(w fyne.Window) []string {
 }
 
 
-func CreateUnitSelect(w fyne.Window) *widget.Select {
+func CreateUnitSelectWithError(w fyne.Window) *uiTypes.SelectWithError {
 	unitNames := CreateUnitSelectOptions(w)
-	unit_select := selects.CreateSelect(
+	unit_select := selects.CreateSelectWithError(
         &selects.CreateSelectParams{
             Placeholder: "Выберите единицу учета товара",
             Options: unitNames,
@@ -38,12 +36,12 @@ func CreateUnitSelect(w fyne.Window) *widget.Select {
 }
 
 
-func CreateUnitSelectWithError(w fyne.Window) (*widget.Select, *canvas.Text) {
-	unit_select := CreateUnitSelect(w)
-	unit_select_error := uiUtils.EmptyFieldErrorLabel()
-	unit_select.OnChanged = func(s string) {unit_select_error.Text = ""}
-	return unit_select, unit_select_error
-}
+// func CreateUnitSelectWithError(w fyne.Window) (*widget.Select, *canvas.Text) {
+// 	unit_select := CreateUnitSelect(w)
+// 	unit_select_error := uiUtils.EmptyFieldErrorLabel()
+// 	unit_select.OnChanged = func(s string) {unit_select_error.Text = ""}
+// 	return unit_select, unit_select_error
+// }
 
 
 func GetUnitID(w fyne.Window, unitName string) uint {

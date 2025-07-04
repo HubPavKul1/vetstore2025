@@ -29,12 +29,12 @@ func CreatePackagingSelectOptions(w fyne.Window) []string{
 
 func CreatePackagingSelect(w fyne.Window) *widget.Select {
 	packNames := CreatePackagingSelectOptions(w)
-	pack_select := selects.CreateSelect(
+	packSelect := selects.CreateSelect(
         &selects.CreateSelectParams{
 			Placeholder: "Выберите упаковку товара",
             Options: packNames,
         })
-	return pack_select
+	return packSelect
 }
 
 func CreatePackagingSelectWithError(w fyne.Window) (*widget.Select, *canvas.Text) {

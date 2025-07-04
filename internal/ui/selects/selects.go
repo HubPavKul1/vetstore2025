@@ -4,6 +4,8 @@ import (
 	"strings"
 
 	"fyne.io/fyne/v2/widget"
+	"github.com/HubPavKul1/vetstore2025/internal/ui/uiTypes"
+	"github.com/HubPavKul1/vetstore2025/internal/ui/uiUtils"
 )
 
 type CreateSelectParams struct {
@@ -20,4 +22,14 @@ func CreateSelect(params *CreateSelectParams) *widget.Select {
 	}
 
 	return s
+}
+
+
+func CreateSelectWithError(params *CreateSelectParams) *uiTypes.SelectWithError {
+	s := CreateSelect(params)
+	errorLabel := uiUtils.EmptyFieldErrorLabel()
+	s.OnChanged = func(s string) {errorLabel.Text = ""}
+	selectWithError := uiTypes.SelectWithError{Select: s, ErrorLabel: errorLabel}
+
+	return &selectWithError
 }

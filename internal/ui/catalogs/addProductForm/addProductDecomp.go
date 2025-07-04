@@ -20,8 +20,8 @@ func AddProductWindow() {
     updateUnitChan := make(chan struct{})
 
     pack_select, packSelectError := catalogs.CreatePackagingSelectWithError(w)
-    unit_select, unitSelectError := catalogs.CreateUnitSelectWithError(w)
-    subcat_select, subcatSelectError := catalogs.CreateSubCategorySelectWithError()
+    unitSelect := catalogs.CreateUnitSelectWithError(w)
+    subcatSelect := catalogs.CreateSubCategorySelectWithError()
     cat_select := catalogs.CreateCategorySelectWithError(w)
     cat_select.Select.OnChanged = func(s string) {
         cat_select.ErrorLabel.Text = ""
@@ -29,7 +29,7 @@ func AddProductWindow() {
             return
         }
         subcatNames := catalogs.CreateSubCategorySelectOptions(w, s)
-        subcat_select.SetOptions(subcatNames)
+        subcatSelect.Select.SetOptions(subcatNames)
     }
 
     nameEntry := entries.EntryWithError("Введите наименование товара")
@@ -50,12 +50,12 @@ func AddProductWindow() {
             // return
         }
 
-        selectedSubCategory := subcat_select.Selected
+        selectedSubCategory := subcatSelect.Select.Selected
         subcategoryID := catalogs.GetSubcatID(w, selectedSubCategory)
         name := nameEntry.Input.Text
         selectedPackName := pack_select.Selected
         packID := catalogs.GetPackagingID(w, selectedPackName)
-        selectedUnitName := unit_select.Selected
+        selectedUnitName := unitSelect.Select.Selected
         unitID := catalogs.GetUnitID(w, selectedUnitName)
 
         // Создаем новый товар
@@ -67,16 +67,16 @@ func AddProductWindow() {
         })
 
         cat_select.Select.ClearSelected()
-        subcat_select.ClearSelected()
+        subcatSelect.Select.ClearSelected()
         nameEntry.Input.SetText("")
         pack_select.ClearSelected()
-        unit_select.ClearSelected()
+        unitSelect.Select.ClearSelected()
     }
 
     // Обновляем селекты после добавления новых данных
     go HandleUpdateCategoryChannel(updateCategoryChan, w, cat_select.Select)
     go HandleUpdatePackagingChannel(updatePackagingChan, w, pack_select)
-    go HandleUpdateUnitChannel(updateUnitChan, w, unit_select)
+    go HandleUpdateUnitChannel(updateUnitChan, w, unitSelect.Select)
 
     // Создаем контейнер для полей и кнопки
     content := container.NewVBox(
@@ -86,8 +86,8 @@ func AddProductWindow() {
                 cat_select.ErrorLabel, 
             ),
             container.NewVBox(
-                container.NewHBox(subcat_select, catalogs.AddSubCategoryBtn(w)),
-                subcatSelectError,
+                container.NewHBox(subcatSelect.Select, catalogs.AddSubCategoryBtn(w)),
+                subcatSelect.ErrorLabel,
             ),   
         ),
         container.NewVBox(nameEntry.Input, nameEntry.ErrorLabel,),
@@ -97,8 +97,8 @@ func AddProductWindow() {
                 packSelectError,
             ),
             container.NewVBox(
-                container.NewHBox(unit_select, catalogs.AddUnitBtn(w, updateUnitChan)),
-                unitSelectError,
+                container.NewHBox(unitSelect.Select, catalogs.AddUnitBtn(w, updateUnitChan)),
+                unitSelect.ErrorLabel,
             ),    
         ),
         saveButton,
