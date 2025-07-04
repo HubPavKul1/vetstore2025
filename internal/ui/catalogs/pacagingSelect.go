@@ -2,12 +2,10 @@ package catalogs
 
 import (
 	"fyne.io/fyne/v2"
-	"fyne.io/fyne/v2/canvas"
 	"fyne.io/fyne/v2/dialog"
-	"fyne.io/fyne/v2/widget"
 	"github.com/HubPavKul1/vetstore2025/internal/services"
 	"github.com/HubPavKul1/vetstore2025/internal/ui/selects"
-	"github.com/HubPavKul1/vetstore2025/internal/ui/uiUtils"
+	"github.com/HubPavKul1/vetstore2025/internal/ui/uiTypes"
 )
 
 
@@ -27,9 +25,9 @@ func CreatePackagingSelectOptions(w fyne.Window) []string{
 }
 
 
-func CreatePackagingSelect(w fyne.Window) *widget.Select {
+func CreatePackagingSelectWithError(w fyne.Window) *uiTypes.SelectWithError {
 	packNames := CreatePackagingSelectOptions(w)
-	packSelect := selects.CreateSelect(
+	packSelect := selects.CreateSelectWithError(
         &selects.CreateSelectParams{
 			Placeholder: "Выберите упаковку товара",
             Options: packNames,
@@ -37,12 +35,7 @@ func CreatePackagingSelect(w fyne.Window) *widget.Select {
 	return packSelect
 }
 
-func CreatePackagingSelectWithError(w fyne.Window) (*widget.Select, *canvas.Text) {
-	pack_select := CreatePackagingSelect(w)
-	pack_select_error := uiUtils.EmptyFieldErrorLabel()
-	pack_select.OnChanged = func(s string) {pack_select_error.Text = ""}
-	return pack_select, pack_select_error
-}
+
 
 
 func GetPackagingID(w fyne.Window, packName string) uint {

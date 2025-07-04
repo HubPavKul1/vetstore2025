@@ -4,46 +4,37 @@ import (
 	"fyne.io/fyne/v2"
 	"fyne.io/fyne/v2/container"
 	"github.com/HubPavKul1/vetstore2025/internal/ui/catalogs"
-	"github.com/HubPavKul1/vetstore2025/internal/ui/entries"
-	"github.com/HubPavKul1/vetstore2025/internal/ui/uiUtils"
 )
 
 
-func CreateAddProductForm(
+func CreateAddProductFormContent(
 	w fyne.Window, 
-	saveCallback func(),
+	form *AddProductForm,
 	updateCategoryChan chan<- struct{},
 	updatePackagingChan chan<- struct{},
 	updateUnitChan chan<- struct{},
 	) *fyne.Container {
 
-    pack_select, packSelectError := catalogs.CreatePackagingSelectWithError(w)
-    unitSelect := catalogs.CreateUnitSelectWithError(w)
-    subcatSelect := catalogs.CreateSubCategorySelectWithError()
-    cat_select := catalogs.CreateCategorySelectWithError(w)
-    nameEntry := entries.EntryWithError("Введите наименование товара")
-    saveButton := uiUtils.CreateSaveBtn()
-    backButton := uiUtils.CreateBackBtn(w)
 
     content := container.NewVBox(
         container.NewHBox(container.NewVBox(
-            container.NewHBox(cat_select.Select, catalogs.AddCategoryBtn(w, updateCategoryChan)), cat_select.ErrorLabel,
+            container.NewHBox(form.CategorySelect.Select, catalogs.AddCategoryBtn(w, updateCategoryChan)), form.CategorySelect.ErrorLabel,
         )),
         container.NewHBox(container.NewVBox(
-            container.NewHBox(subcatSelect.Select, catalogs.AddSubCategoryBtn(w)), subcatSelect.ErrorLabel,
+            container.NewHBox(form.SubcategorySelect.Select, catalogs.AddSubCategoryBtn(w)), form.SubcategorySelect.ErrorLabel,
         )),
-        container.NewVBox(nameEntry.Input, nameEntry.ErrorLabel),
+        container.NewVBox(form.ProductNameEntry.Input, form.ProductNameEntry.ErrorLabel),
         container.NewHBox(container.NewVBox(
-            container.NewHBox(pack_select, catalogs.AddPackagingBtn(w, updatePackagingChan)), packSelectError,
+            container.NewHBox(form.PackagingSelect.Select, catalogs.AddPackagingBtn(w, updatePackagingChan)), form.PackagingSelect.ErrorLabel,
         )),
         container.NewHBox(container.NewVBox(
-            container.NewHBox(unitSelect.Select, catalogs.AddUnitBtn(w, updateUnitChan)), unitSelect.ErrorLabel,
+            container.NewHBox(form.UnitSelect.Select, catalogs.AddUnitBtn(w, updateUnitChan)), form.UnitSelect.ErrorLabel,
         )),
-        saveButton,
-        backButton,
+        form.SaveButton,
+        form.BackButton,
     )
 
-    saveButton.OnTapped = saveCallback
+    form.SaveButton.OnTapped = func() {SubmitFormHandler(w, form)}
 
     return content
 }

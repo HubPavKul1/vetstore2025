@@ -36,14 +36,6 @@ func CreateUnitSelectWithError(w fyne.Window) *uiTypes.SelectWithError {
 }
 
 
-// func CreateUnitSelectWithError(w fyne.Window) (*widget.Select, *canvas.Text) {
-// 	unit_select := CreateUnitSelect(w)
-// 	unit_select_error := uiUtils.EmptyFieldErrorLabel()
-// 	unit_select.OnChanged = func(s string) {unit_select_error.Text = ""}
-// 	return unit_select, unit_select_error
-// }
-
-
 func GetUnitID(w fyne.Window, unitName string) uint {
 	unitID, err := services.GetUnitIDBYNameService(unitName)
 	if err != nil {

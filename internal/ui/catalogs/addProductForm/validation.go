@@ -16,7 +16,7 @@ func IsAddProductFormValid(form *AddProductForm) bool {
         return valid
     }
         
-    if !uiUtils.IsValidSelect(form.CategorySelect.Select.Selected) {
+    if !uiUtils.IsValidSelect(form.SubcategorySelect.Select.Selected) {
         valid = false
         form.SubcategorySelect.ErrorLabel.Text = uiUtils.EmptyFieldError
         return valid
@@ -34,9 +34,9 @@ func IsAddProductFormValid(form *AddProductForm) bool {
         return valid
     }
       
-    if !uiUtils.IsValidSelect(form.UnitSElect.Select.Selected) {
+    if !uiUtils.IsValidSelect(form.UnitSelect.Select.Selected) {
         valid = false
-        form.UnitSElect.ErrorLabel.Text = uiUtils.EmptyFieldError
+        form.UnitSelect.ErrorLabel.Text = uiUtils.EmptyFieldError
         return valid
     }
 

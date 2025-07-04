@@ -20,7 +20,7 @@ type AddProductForm struct {
 	SubcategorySelect *uiTypes.SelectWithError
 	ProductNameEntry *uiTypes.InputWithError
 	PackagingSelect *uiTypes.SelectWithError
-	UnitSElect *uiTypes.SelectWithError
+	UnitSelect *uiTypes.SelectWithError
 	SaveButton *widget.Button
 	BackButton *widget.Button
 	

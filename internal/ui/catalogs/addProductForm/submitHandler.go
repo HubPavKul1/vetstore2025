@@ -2,52 +2,48 @@ package addProductForm
 
 import (
 	"fyne.io/fyne/v2"
-	"fyne.io/fyne/v2/widget"
+	"github.com/HubPavKul1/vetstore2025/internal/ui/catalogs"
 )
 
 // SubmitFormHandler определяет процесс сохранения данных формы
-func SubmitFormHandler(w fyne.Window, form *fyne.Container, formFields []*string) {
-	saveButton := form.Objects[len(form.Objects)-2].(*widget.Button)
-    saveButton.OnTapped = func() {
-        // Сбор данных из формы
-
-        // name := nameEntry.Text
-        // category := cat_select.Selected
-        // subcategory := subcat_select.Selected
-        // packaging := pack_select.Selected
-        // unit := unit_select.Selected
+func SubmitFormHandler(w fyne.Window, form *AddProductForm) {
+	// saveButton := form.SaveButton
+    // saveButton.OnTapped = func() {
 
         // Производим валидацию данных
-        // if !ValidateForm(name, category, subcategory, packaging, unit) {
-        //     return
-        // }
+        if !IsAddProductFormValid(form) {
+            return
+        }
+
+        // Получаем элементы формы
+        categorySelect := form.CategorySelect.Select
+        subcategorySelect := form.SubcategorySelect.Select
+        productNameInput := form.ProductNameEntry.Input
+        packagingSelect := form.PackagingSelect.Select
+        unitSelect := form.UnitSelect.Select
 
         // Получаем IDs из баз данных
-        // subcategoryID := GetSubcatID(w, subcategory)
-        // packID := GetPackagingID(w, packaging)
-        // unitID := GetUnitID(w, unit)
+        subcategoryID := catalogs.GetSubcatID(w, subcategorySelect.Selected)
+        packID := catalogs.GetPackagingID(w, packagingSelect.Selected)
+        unitID := catalogs.GetUnitID(w, unitSelect.Selected)
+        productName := productNameInput.Text
 
         // Готовим объект продукта
-        // product := &addProductForm{
-        //     SubcategoryID: subcategoryID,
-        //     Name:          name,
-        //     PackID:        packID,
-        //     UnitID:        unitID,
-        // }
+        product := &AddProductFormData{
+            SubcategoryID: subcategoryID,
+            ProductName: productName,
+            PackagingID:        packID,
+            UnitID:        unitID,
+        }
 
         // Сохраняем продукт
-        // saveNewProduct(w, product)
+        SaveNewProduct(w, product)
 
         // Очищаем форму
-        // clearFormFields()
+        categorySelect.ClearSelected()
+        subcategorySelect.ClearSelected()
+        productNameInput.SetText("")
+        packagingSelect.ClearSelected()
+        unitSelect.ClearSelected()
     }
-}
-
-// clearFormFields сбрасывает состояние полей формы
-// func clearFormFields() {
-//     cat_select.ClearSelected()
-//     subcat_select.ClearSelected()
-//     nameEntry.SetText("")
-//     pack_select.ClearSelected()
-//     unit_select.ClearSelected()
 // }
